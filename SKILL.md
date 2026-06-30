@@ -16,8 +16,7 @@ description: |
   unregistered, nags with a reminder dialog until registered), or unknown_license
   (vendor doc page has no marker either way) — plus a requires_addon note for
   DynaPDF/XL/Saxon, which need a separate paid add-on. Flag licensed/unknown/add-on
-  status, don't assume free. Do
-  not use for BaseElements/Goya (BE_ functions — see goya-be-plugin).
+  status, don't assume free.
 ---
 
 # MBS FileMaker Plugin — Reference Skill
