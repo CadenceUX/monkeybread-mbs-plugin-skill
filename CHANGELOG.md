@@ -1,5 +1,60 @@
 # Changelog
 
+## v1.3 — 2026-07-05
+
+- **Replaced the docset pipeline with a live-site crawl.** The vendor now publishes
+  every documentation page as clean markdown (`mbsplugins.eu/{FunctionName}.md`, with
+  `index.md` and `component_X.md` as listing pages) — no `llms.txt` exists, but the
+  markdown mirror serves the same purpose. `scripts/build_catalog.py` no longer needs a
+  downloaded `MBS.docset`: it enumerates functions from the markdown listing pages and
+  parses detail from the matching `.shtml` pages (the HTML is still used for detail
+  because only it carries the paste-ready `fmxmlsnippet` XML examples — the `.md`
+  mirror drops them). The script now fails loudly if any page can't be fetched instead
+  of skipping, and takes an optional fetch-cache directory.
+- **Catalog grew from 7,370 to 7,807 functions (245 components)**, re-derived by full
+  enumeration per the catalog-accuracy rules, and verified a strict superset of v1.2
+  (zero functions lost). The growth breaks down as: functions added to the plugin
+  since the 16.2 docset snapshot, 39 pre-release 16.3 functions, and 266 deprecated
+  functions the docset never indexed (see below). The site's `index.md` headline
+  counter said 7,919 at build time; the ~112 residual is not linked from any component
+  or deprecated listing page and is documented as such rather than papered over.
+- **New `prerelease` flag (39 functions).** The doc site documents in-development
+  plugin versions ahead of release — at build time it already carried 16.3 function
+  pages while the release-notes page topped out at 16.2. These are included and tagged
+  `"prerelease": true` (all verified `version_introduced: 16.3`), so Claude can answer
+  about them while warning they may not be in the user's installed plugin. The MBS
+  version self-check now explains that once 16.3 ships, the flags are stale-conservative
+  until a rebuild.
+- **New `deprecated` flag (396 functions).** Enumeration now includes the vendor's
+  `deprecated.md` listing page; 266 of those functions (including the entire Calendar
+  and Addressbook components) were absent from all previous catalog versions, and 130
+  that still sit on component pages are now flagged. Deprecated entries parse fully
+  (signature, parameters, examples) so legacy scripts can be explained and replacements
+  suggested.
+- **Fixed an enumeration gap for dot-less top-level functions** (`Trace`, `IsError`,
+  `ClearRegistration`, `CF`, ... — 38 functions). The initial markdown-link pattern
+  required a dotted name, which silently dropped them; caught by diffing against the
+  v1.2 catalog before publishing. Each remains its own component key, as in v1.2.
+- **Live doc URL pattern switched from `.shtml` to `.md`** in SKILL.md, entry `url`
+  fields, and `references/index.json` — the markdown pages are far better fetch targets.
+  The "Created/last changed" documentation-freshness line is present in the `.md` pages
+  too, and the catalog's build date (2026-07-05) is now the stated comparison baseline.
+- **New cheap staleness signal**: `index.md`'s "Currently N functions" headline is
+  stored as `site_function_count_at_build` (7,919) — one small fetch to detect that the
+  vendor documented new functions, validated live (it moved from 7,370-era counts).
+  Also documented `newinversionNNN.md` pages as the fastest way to see what a rebuild
+  would pick up.
+- `references/index.json` meta renamed/extended: `plugin_version_released_at_build`
+  (replaces `plugin_version_covered`), `site_function_count_at_build`,
+  `prerelease_function_count` + `prerelease_meaning`, `deprecated_function_count` +
+  `deprecated_meaning`, `count_note`, `source`, and per-component `prerelease_count` /
+  `deprecated_count`.
+- Status counts re-derived: `free` 2,553 / `licensed` 4,682 / `unknown_license` 572
+  (now across 38 components; Llama joins the mostly-unmarked list).
+- README fixes: brand name corrected to the one-word form "CadenceUX", installation now
+  leads with the double-click `.skill` method, attribution line added to SKILL.md's
+  Licence section.
+
 ## v1.2 — 2026-06-25
 
 - **Fixed misleading `licensed` status description.** SKILL.md, README.md, and

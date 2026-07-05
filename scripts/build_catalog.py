@@ -1,42 +1,71 @@
 #!/usr/bin/env python3
 """
-Builds the monkeybread-mbs-plugin reference catalog from a local MBS.docset.
+Builds the monkeybread-mbs-plugin reference catalog from the live
+mbsplugins.eu documentation site (no local docset needed).
 
-Reads docSet.dsidx for the function index, parses every function's HTML page
-(fixed Dash docset layout), and bin-packs components by size into NUM_GROUPS
-grouped JSON files under references/ (group-01.json, group-02.json, ...),
-plus a references/index.json manifest mapping each component to its group
-file. Grouped rather than one-file-per-component to stay well under the
-~200-file practical ceiling on Claude.ai skill zip uploads.
+Enumeration comes from the vendor's markdown mirror -- index.md lists every
+component as component_X.md, and each component page lists every function
+with a link to its doc-page stem. Function detail is parsed from the .shtml
+HTML pages (same fixed layout the old Dash-docset pipeline used) because
+only the HTML carries the paste-ready fmxmlsnippet XML examples (the .md
+mirror drops the copy-box textarea that holds them).
+
+Output is unchanged in shape from v1.2: components bin-packed by size into
+NUM_GROUPS grouped JSON files under references/ (group-01.json, ...), plus
+a references/index.json manifest. Grouped rather than one-file-per-component
+to stay well under the ~200-file practical ceiling on Claude.ai skill zip
+uploads.
 
 Usage:
-    python3 build_catalog.py /path/to/MBS.docset /path/to/output/references
+    python3 build_catalog.py /path/to/output/references [/path/to/cache]
 
-Re-run this after updating MBS.docset to refresh the catalog for a new plugin
-version. Every function gets a status field:
+The optional cache directory stores fetched pages so an interrupted or
+repeated run doesn't refetch ~8,000 pages. Delete the cache (or pass a
+fresh directory) to force a full refetch for a new plugin version.
+
+Every function gets a status field:
   - "free"            -- page says "This function is free to use."
-  - "licensed"         -- page says "This function checks for a license."
-  - "unknown_license"  -- page has neither marker (a vendor doc-template gap,
-                           confirmed present on the live site too, not just a
-                           stale docset -- see v1.2 CHANGELOG). Don't guess.
+  - "licensed"        -- page says "This function checks for a license."
+  - "unknown_license" -- page has neither marker (a vendor doc-template
+                          gap; don't guess).
+
+Every function also gets a prerelease flag: the site documents functions
+for in-development plugin versions ahead of their release (e.g. 16.3 pages
+were live while the release-notes page still topped out at 16.2). A
+function is tagged "prerelease": true when its version_introduced is
+higher than the latest released version found on the vendor's release
+notes page at build time.
+
+Every function also gets a deprecated flag, from the vendor's deprecated.md
+listing page. Deprecated functions still exist and are documented -- some
+remain on their component page, others are listed only on deprecated.md --
+so both sources are enumerated and merged.
 """
 import json
 import re
-import sqlite3
 import sys
+import time
+import urllib.request
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 from bs4 import BeautifulSoup
 
+BASE_URL = "https://www.mbsplugins.eu"
+RELEASE_NOTES_URL = "https://www.monkeybreadsoftware.com/filemaker/releasenotes.shtml"
+USER_AGENT = "CadenceUX-skill-catalog-builder (darrin@cadenceux.com.au)"
+
 FREE_MARKER = "This function is free to use."
 LICENSED_MARKER = "This function checks for a license."
 
-# Number of grouped reference files to bin-pack components into (see the
-# packing step in main()). Keeps total skill file count well under the
-# ~200-file practical ceiling on Claude.ai skill zip uploads, regardless of
-# how many individual components the docset has.
+# Number of grouped reference files to bin-pack components into. Keeps total
+# skill file count well under the ~200-file practical ceiling on Claude.ai
+# skill zip uploads, regardless of how many components the site lists.
 NUM_GROUPS = 20
+
+MAX_WORKERS = 8
+FETCH_RETRIES = 4
 
 # Components confirmed (via the vendor's pricing page) to require a separate
 # paid add-on beyond the base MBS plugin license -- distinct from the per-
@@ -51,6 +80,108 @@ ADDON_COMPONENTS = {
 }
 
 
+def fetch(url, cache_dir=None, cache_key=None):
+    if cache_dir is not None and cache_key is not None:
+        cache_file = cache_dir / cache_key
+        if cache_file.exists():
+            return cache_file.read_text(encoding="utf-8")
+    last_err = None
+    for attempt in range(FETCH_RETRIES):
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                body = resp.read().decode("utf-8", errors="ignore")
+            if cache_dir is not None and cache_key is not None:
+                cache_file = cache_dir / cache_key
+                cache_file.parent.mkdir(parents=True, exist_ok=True)
+                cache_file.write_text(body, encoding="utf-8")
+            return body
+        except Exception as e:  # noqa: BLE001 -- retry any transport error
+            last_err = e
+            time.sleep(1.5 * (attempt + 1))
+    raise RuntimeError(f"failed after {FETCH_RETRIES} attempts: {url}: {last_err}")
+
+
+def version_tuple(version_str):
+    """'16.2' -> (16, 2). Returns None if the string isn't a plain dotted number."""
+    if not version_str:
+        return None
+    m = re.fullmatch(r"[0-9]+(?:\.[0-9]+)*", version_str.strip())
+    if not m:
+        return None
+    return tuple(int(x) for x in version_str.strip().split("."))
+
+
+def latest_released_version():
+    """Topmost 'Release notes for version X.Y' heading on the vendor's release
+    notes page = the latest *shipped* plugin version. The doc site itself runs
+    ahead of this (it documents in-development versions), which is exactly why
+    the prerelease flag exists."""
+    html = fetch(RELEASE_NOTES_URL)
+    m = re.search(r"Release notes for version ([0-9.]+)", html)
+    if not m:
+        raise RuntimeError("could not find a 'Release notes for version' heading -- page layout changed?")
+    return m.group(1)
+
+
+def site_function_count(index_md):
+    """index.md opens with 'Currently NNNN functions ...' -- the cheap one-fetch
+    staleness signal the SKILL.md documents. Store it so future drift checks
+    have a baseline."""
+    m = re.search(r"Currently\s+([0-9,]+)\s+functions", index_md)
+    return int(m.group(1).replace(",", "")) if m else None
+
+
+FUNC_LINK = re.compile(r"\[([A-Za-z0-9.]+)\]\(([A-Za-z0-9]+)\.md\)")
+
+
+def function_links(md):
+    """A real function link's stem is its name with any dots removed --
+    [DynaPDF.Parser.Content](DynaPDFParserContent.md), or the dot-less
+    top-level functions like [Trace](Trace.md). The name==stem rule filters
+    out prose links to component_X.md / newinversionNNN.md / index pages."""
+    out = {}
+    for name, page_stem in FUNC_LINK.findall(md):
+        if name.replace(".", "").lower() == page_stem.lower():
+            out[name] = page_stem
+    return out
+
+
+def enumerate_functions(cache_dir):
+    """index.md -> component_X.md pages, plus deprecated.md ->
+    ({function name: stem}, component page stems, site headline count,
+    set of deprecated function names)."""
+    index_md = fetch(f"{BASE_URL}/index.md", cache_dir, "md/index.md")
+    claimed_count = site_function_count(index_md)
+
+    component_stems = sorted(set(re.findall(r"\(component_([A-Za-z0-9]+)\.md\)", index_md)))
+    if not component_stems:
+        raise RuntimeError("no component_X.md links found in index.md -- page layout changed?")
+
+    functions = {}  # name -> stem
+
+    def fetch_component(stem):
+        return stem, fetch(f"{BASE_URL}/component_{stem}.md", cache_dir, f"md/component_{stem}.md")
+
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
+        for future in as_completed([pool.submit(fetch_component, s) for s in component_stems]):
+            _, md = future.result()
+            functions.update(function_links(md))
+
+    # Deprecated functions are documented too -- some still appear on their
+    # component page, others only on the deprecated listing. Enumerate both
+    # and remember which names are deprecated so entries can be flagged.
+    deprecated_md = fetch(f"{BASE_URL}/deprecated.md", cache_dir, "md/deprecated.md")
+    deprecated_links = function_links(deprecated_md)
+    deprecated_names = set(deprecated_links)
+    functions.update(deprecated_links)
+
+    return functions, component_stems, claimed_count, deprecated_names
+
+
+# --- .shtml page parsing (unchanged layout from the v1.2 docset pipeline) ---
+
+
 def text_or_none(node):
     if node is None:
         return None
@@ -59,40 +190,33 @@ def text_or_none(node):
 
 
 def parse_platform_table(soup):
-    """The second table on the page: Component | Version | macOS | Windows | Linux | Server | iOS SDK."""
-    tables = soup.find_all("table")
-    plat_table = None
-    for t in tables:
+    """The table headed Component | Version | macOS | Windows | Linux | Server | iOS SDK."""
+    for t in soup.find_all("table"):
         header_row = t.find("tr")
         if header_row is None:
             continue
         header_cells = [c.get_text(strip=True) for c in header_row.find_all(["td", "th"])]
         if "Component" in header_cells and "Version" in header_cells:
-            plat_table = t
-            break
-    if plat_table is None:
-        return None, {}
+            rows = t.find_all("tr")
+            if len(rows) < 2:
+                return None, {}
+            cells = rows[1].find_all("td")
+            if len(cells) < 7:
+                return None, {}
+            version = text_or_none(cells[1])
 
-    rows = plat_table.find_all("tr")
-    if len(rows) < 2:
-        return None, {}
-    cells = rows[1].find_all("td")
-    if len(cells) < 7:
-        return None, {}
+            def yes(cell):
+                return "Yes" in cell.get_text()
 
-    version = text_or_none(cells[1])
-
-    def yes(cell):
-        return "Yes" in cell.get_text()
-
-    compat = {
-        "macos": yes(cells[2]),
-        "windows": yes(cells[3]),
-        "linux": yes(cells[4]),
-        "server": yes(cells[5]),
-        "ios_sdk": yes(cells[6]),
-    }
-    return version, compat
+            compat = {
+                "macos": yes(cells[2]),
+                "windows": yes(cells[3]),
+                "linux": yes(cells[4]),
+                "server": yes(cells[5]),
+                "ios_sdk": yes(cells[6]),
+            }
+            return version, compat
+    return None, {}
 
 
 def parse_signature(soup):
@@ -193,8 +317,14 @@ def parse_see_also(soup):
     return [a.get_text(strip=True) for a in ul.find_all("a")]
 
 
-def parse_function_page(path: Path, name: str, status: str):
-    html = path.read_text(encoding="utf-8", errors="ignore")
+def parse_function_page(html, name, stem, released_tuple, deprecated):
+    if FREE_MARKER in html:
+        status = "free"
+    elif LICENSED_MARKER in html:
+        status = "licensed"
+    else:
+        status = "unknown_license"
+
     soup = BeautifulSoup(html, "html.parser")
 
     h2 = soup.find("h2")
@@ -207,74 +337,55 @@ def parse_function_page(path: Path, name: str, status: str):
             short_desc = p.get_text(" ", strip=True)
 
     version, compat = parse_platform_table(soup)
-    signature = parse_signature(soup)
-    parameters = parse_parameters(soup)
-    result = parse_simple_section(soup, "Result")
-    description = parse_simple_section(soup, "Description") or short_desc
-    examples = parse_examples(soup)
-    see_also = parse_see_also(soup)
+    introduced = version_tuple(version)
+    prerelease = bool(introduced and released_tuple and introduced > released_tuple)
 
     return {
         "name": page_name,
-        "signature": signature,
-        "description": description,
-        "parameters": parameters,
-        "result": result,
+        "signature": parse_signature(soup),
+        "description": parse_simple_section(soup, "Description") or short_desc,
+        "parameters": parse_parameters(soup),
+        "result": parse_simple_section(soup, "Result"),
         "version_introduced": version,
+        "prerelease": prerelease,
+        "deprecated": deprecated,
         "compatibility": compat,
-        "examples": examples,
-        "see_also": see_also,
+        "examples": parse_examples(soup),
+        "see_also": parse_see_also(soup),
         "status": status,
-        "url": f"https://www.mbsplugins.eu/{path.stem}.shtml",
+        "url": f"{BASE_URL}/{stem}.md",
     }
 
 
-def detect_plugin_version(docs_dir: Path):
-    """The docset has one newinversionNNN.html page per release (e.g. newinversion162.html
-    -> 'New in version 16.2'). The highest-numbered one is the latest version this
-    docset's data reflects -- there's no single version field in Info.plist or index.html."""
-    best = None
-    for p in docs_dir.glob("newinversion*.html"):
-        m = re.match(r"newinversion(\d+)\.html$", p.name)
-        if not m:
-            continue
-        html = p.read_text(encoding="utf-8", errors="ignore")
-        title_match = re.search(r"New in version ([0-9.]+)", html)
-        if not title_match:
-            continue
-        version_str = title_match.group(1)
-        sort_key = tuple(int(x) for x in version_str.split("."))
-        if best is None or sort_key > best[0]:
-            best = (sort_key, version_str)
-    return best[1] if best else None
-
-
 def main():
-    if len(sys.argv) != 3:
+    if len(sys.argv) not in (2, 3):
         print(__doc__)
         sys.exit(1)
 
-    docset_path = Path(sys.argv[1])
-    out_dir = Path(sys.argv[2])
+    out_dir = Path(sys.argv[1])
     out_dir.mkdir(parents=True, exist_ok=True)
+    cache_dir = Path(sys.argv[2]) if len(sys.argv) == 3 else None
+    if cache_dir is not None:
+        cache_dir.mkdir(parents=True, exist_ok=True)
 
-    db_path = docset_path / "Contents" / "Resources" / "docSet.dsidx"
-    docs_dir = docset_path / "Contents" / "Resources" / "Documents"
+    released = latest_released_version()
+    released_tuple = version_tuple(released)
+    print(f"Latest released plugin version (release notes page): {released}")
 
-    conn = sqlite3.connect(str(db_path))
-    rows = conn.execute("SELECT name, path FROM searchIndex WHERE type='Function'").fetchall()
+    functions, component_stems, claimed_count, deprecated_names = enumerate_functions(cache_dir)
+    print(
+        f"Enumerated {len(functions)} unique functions from {len(component_stems)} component pages "
+        f"+ deprecated.md ({len(deprecated_names)} deprecated)"
+    )
+    if claimed_count is not None:
+        print(f"index.md claims 'Currently {claimed_count} functions'")
 
-    plugin_version_covered = detect_plugin_version(docs_dir)
-
-    # The vendor's own docset has a handful of mis-cased component prefixes
-    # (e.g. "Webview.X" alongside "WebView.X", "Progressdialog.X" alongside
-    # "ProgressDialog.X") that are the same logical component, not distinct
-    # ones. Group case-insensitively and pick the most common casing as the
-    # canonical display name, so they land in one file instead of silently
-    # colliding on the same filename slug.
+    # Same mis-cased-component-prefix normalisation as v1.2 (the vendor's own
+    # site has e.g. "Webview.X" alongside "WebView.X"): group case-
+    # insensitively and pick the most common casing as the display name.
     raw_component_counts = defaultdict(lambda: defaultdict(int))
-    for name, _ in rows:
-        raw_component = name.split(".")[0] if "." in name else name
+    for name in functions:
+        raw_component = name.split(".")[0]
         raw_component_counts[raw_component.lower()][raw_component] += 1
     canonical_name = {
         lower: max(variants.items(), key=lambda kv: kv[1])[0]
@@ -283,74 +394,109 @@ def main():
 
     by_component = defaultdict(list)
     status_counts = {"free": 0, "licensed": 0, "unknown_license": 0}
-    skipped_missing_page = 0
+    prerelease_count = 0
+    deprecated_count = 0
+    failures = []
 
-    for name, rel_path in rows:
-        raw_component = name.split(".")[0] if "." in name else name
-        component = canonical_name[raw_component.lower()]
-        page_path = docs_dir / rel_path
-        if not page_path.exists():
-            skipped_missing_page += 1
-            continue
+    def fetch_and_parse(item):
+        name, stem = item
+        html = fetch(f"{BASE_URL}/{stem}.shtml", cache_dir, f"shtml/{stem}.shtml")
+        return name, parse_function_page(html, name, stem, released_tuple, name in deprecated_names)
 
-        html = page_path.read_text(encoding="utf-8", errors="ignore")
-        if FREE_MARKER in html:
-            status = "free"
-        elif LICENSED_MARKER in html:
-            status = "licensed"
-        else:
-            status = "unknown_license"
+    items = sorted(functions.items())
+    done = 0
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
+        futures = {pool.submit(fetch_and_parse, item): item for item in items}
+        for future in as_completed(futures):
+            name, stem = futures[future]
+            try:
+                _, entry = future.result()
+            except Exception as e:  # noqa: BLE001
+                failures.append((name, str(e)))
+                continue
+            component = canonical_name[name.split(".")[0].lower()]
+            by_component[component].append(entry)
+            status_counts[entry["status"]] += 1
+            if entry["prerelease"]:
+                prerelease_count += 1
+            if entry["deprecated"]:
+                deprecated_count += 1
+            done += 1
+            if done % 500 == 0:
+                print(f"  parsed {done}/{len(items)} function pages...")
 
-        entry = parse_function_page(page_path, name, status)
-        by_component[component].append(entry)
-        status_counts[status] += 1
+    if failures:
+        print(f"FATAL: {len(failures)} function pages could not be fetched/parsed:")
+        for name, err in failures[:20]:
+            print(f"  {name}: {err}")
+        sys.exit(1)
 
     index = {
         "skill": "monkeybread-mbs-plugin",
-        "version": "v1.2",
+        "version": "v1.3",
         "plugin_name": "MBS FileMaker Plugin",
-        "plugin_version_covered": plugin_version_covered,
+        "plugin_version_released_at_build": released,
+        "site_function_count_at_build": claimed_count,
+        "catalog_function_count": sum(status_counts.values()),
+        "prerelease_function_count": prerelease_count,
+        "prerelease_meaning": "The vendor's doc site documents functions for in-development "
+        "plugin versions ahead of release. prerelease: true means the function's "
+        "version_introduced was higher than plugin_version_released_at_build when this "
+        "catalog was built -- it exists in the docs but may not be in the shipping plugin "
+        "yet. Once that version ships, the flag is stale until the next rebuild.",
+        "deprecated_function_count": deprecated_count,
+        "deprecated_meaning": "Listed on the vendor's deprecated functions page "
+        "(https://www.mbsplugins.eu/deprecated.md) at build time. Deprecated functions "
+        "still exist and run, but the vendor recommends a replacement -- check the "
+        "function's own doc page for what to use instead.",
+        "count_note": "catalog_function_count is derived by enumerating every function "
+        "link on the vendor's component_X.md pages plus the deprecated.md page. The "
+        "site's index.md headline counter (site_function_count_at_build) is higher by a "
+        "small residual not linked from any listing page; the enumerated set is a strict "
+        "superset of the previous docset-based catalog and includes every function on "
+        "the newest newinversionNNN.md pages.",
         "vendor": "Monkeybread Software (Christian Schmitz)",
+        "source": "Live crawl of https://www.mbsplugins.eu (enumerated via the markdown "
+        "mirror index.md/component_X.md, detail parsed from the .shtml pages).",
         "license": "comprehensive catalog -- every function tagged with a status field "
         "(free / licensed / unknown_license). See status_counts and status_meaning below.",
         "status_meaning": {
             "free": "Vendor doc page states this function is free to use (works unregistered).",
             "licensed": "Vendor doc page states this function checks for a license "
             "(requires the base MBS plugin to be registered).",
-            "unknown_license": "Vendor doc page has neither marker -- confirmed present on "
-            "the live site too, not a stale-docset issue. Status genuinely unconfirmed; "
-            "verify against the live url before relying on this being free or licensed.",
+            "unknown_license": "Vendor doc page has neither marker. Status genuinely "
+            "unconfirmed; verify against the live url before relying on this being free or licensed.",
         },
         "addon_components": ADDON_COMPONENTS,
-        "url_pattern": "https://www.mbsplugins.eu/{FunctionName}.shtml",
-        "release_notes_url": "https://www.monkeybreadsoftware.com/filemaker/releasenotes.shtml",
+        "url_pattern": "https://www.mbsplugins.eu/{FunctionNameWithoutDots}.md",
+        "index_url": "https://www.mbsplugins.eu/index.md",
+        "release_notes_url": RELEASE_NOTES_URL,
         "total_function_count": sum(status_counts.values()),
         "status_counts": status_counts,
-        "skipped_missing_page_count": skipped_missing_page,
         "components": {},
     }
 
-    # Claude.ai's skill zip upload has a practical (community-reported, not
-    # officially documented) ceiling around 200 files. One JSON file per
-    # component would mean 233 files just for references/ -- comfortably over
-    # that. Bin-pack components into a fixed number of group files instead,
-    # by serialized size (greedy largest-component-into-lightest-group),
-    # so file count stays small and roughly constant regardless of how many
-    # components the docset has next time this is regenerated.
     component_blobs = {}
-    for component, functions in by_component.items():
-        functions_sorted = sorted(functions, key=lambda f: f["name"])
+    for component, funcs in by_component.items():
+        funcs_sorted = sorted(funcs, key=lambda f: f["name"])
         status_counts_c = {"free": 0, "licensed": 0, "unknown_license": 0}
-        for f in functions_sorted:
+        prerelease_c = 0
+        deprecated_c = 0
+        for f in funcs_sorted:
             status_counts_c[f["status"]] += 1
-        blob = {
+            if f["prerelease"]:
+                prerelease_c += 1
+            if f["deprecated"]:
+                deprecated_c += 1
+        component_blobs[component] = {
             "component": component,
-            "function_count": len(functions_sorted),
+            "function_count": len(funcs_sorted),
             "status_counts": status_counts_c,
+            "prerelease_count": prerelease_c,
+            "deprecated_count": deprecated_c,
             "requires_addon": ADDON_COMPONENTS.get(component),
-            "functions": functions_sorted,
+            "functions": funcs_sorted,
         }
-        component_blobs[component] = blob
 
     sizes = {c: len(json.dumps(b, ensure_ascii=False)) for c, b in component_blobs.items()}
     ordered = sorted(sizes, key=lambda c: -sizes[c])
@@ -369,9 +515,7 @@ def main():
         group_components_sorted = sorted(group_components, key=lambda c: c.lower())
         (out_dir / filename).write_text(
             json.dumps(
-                {
-                    "components": {c: component_blobs[c] for c in group_components_sorted},
-                },
+                {"components": {c: component_blobs[c] for c in group_components_sorted}},
                 indent=2,
                 ensure_ascii=False,
             ),
@@ -382,6 +526,8 @@ def main():
                 "file": f"references/{filename}",
                 "function_count": component_blobs[component]["function_count"],
                 "status_counts": component_blobs[component]["status_counts"],
+                "prerelease_count": component_blobs[component]["prerelease_count"],
+                "deprecated_count": component_blobs[component]["deprecated_count"],
             }
 
     (out_dir / "index.json").write_text(json.dumps(index, indent=2, ensure_ascii=False), encoding="utf-8")
@@ -389,7 +535,13 @@ def main():
     used_groups = sum(1 for g in groups if g)
     print(f"Parsed {sum(status_counts.values())} functions across {len(by_component)} components")
     print(f"Status breakdown: {status_counts}")
-    print(f"Skipped {skipped_missing_page} missing pages")
+    print(f"Prerelease functions (introduced after v{released}): {prerelease_count}")
+    print(f"Deprecated functions (on deprecated.md): {deprecated_count}")
+    if claimed_count is not None and claimed_count != sum(status_counts.values()):
+        print(
+            f"NOTE: index.md claims {claimed_count} functions but {sum(status_counts.values())} "
+            "were enumerated from component pages -- investigate before publishing counts."
+        )
     print(f"Packed into {used_groups} group files (target {NUM_GROUPS})")
 
 

@@ -1,0 +1,21 @@
+{
+  "description": "Test prompts for monkeybread-mbs-plugin. Each case exercises the documented lookup path (references/index.json -> group-NN.json -> component -> function) plus one status/flag behaviour the skill must surface.",
+  "cases": [
+    {
+      "prompt": "What does MBS(\"Dialog.SetMessage\") do and what are its parameters?",
+      "expected": "Resolves Dialog component via references/index.json to its group file, returns the function's signature, description, and parameters from the catalog entry, and states its licensing status. Does not claim it is free without checking the status field."
+    },
+    {
+      "prompt": "Can I use MBS(\"MongoDB.GridFS.Drop\") in my FileMaker solution?",
+      "expected": "Finds the entry, sees prerelease: true and version_introduced 16.3, and warns that the function is documented for plugin version 16.3 which may not be released/installed yet — rather than presenting it as available in the shipping 16.2 plugin."
+    },
+    {
+      "prompt": "My legacy script calls MBS(\"Calendar.NewEvent\") — is that still OK?",
+      "expected": "Finds the entry, sees deprecated: true, explains it still runs but is on the vendor's deprecated list, and points at the replacement (the newer Events component) rather than endorsing it for new code."
+    },
+    {
+      "prompt": "What does the MBS Trace function do?",
+      "expected": "Resolves the dot-less top-level function Trace via its own component key 'Trace' in references/index.json (component equals the function name when there is no dot) and returns its entry."
+    }
+  ]
+}
