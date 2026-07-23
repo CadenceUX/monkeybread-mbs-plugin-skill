@@ -1,11 +1,11 @@
 {
   "skill": "monkeybread-mbs-plugin",
-  "version": "v1.3",
+  "version": "v1.4",
   "plugin_name": "MBS FileMaker Plugin",
-  "plugin_version_released_at_build": "16.2",
+  "plugin_version_released_at_build": "16.3",
   "site_function_count_at_build": 7919,
   "catalog_function_count": 7807,
-  "prerelease_function_count": 39,
+  "prerelease_function_count": 0,
   "prerelease_meaning": "The vendor's doc site documents functions for in-development plugin versions ahead of release. prerelease: true means the function's version_introduced was higher than plugin_version_released_at_build when this catalog was built -- it exists in the docs but may not be in the shipping plugin yet. Once that version ships, the flag is stale until the next rebuild.",
   "deprecated_function_count": 396,
   "deprecated_meaning": "Listed on the vendor's deprecated functions page (https://www.mbsplugins.eu/deprecated.md) at build time. Deprecated functions still exist and run, but the vendor recommends a replacement -- check the function's own doc page for what to use instead.",
@@ -52,7 +52,7 @@
         "licensed": 141,
         "unknown_license": 256
       },
-      "prerelease_count": 1,
+      "prerelease_count": 0,
       "deprecated_count": 17
     },
     "XL": {
@@ -63,7 +63,7 @@
         "licensed": 364,
         "unknown_license": 103
       },
-      "prerelease_count": 7,
+      "prerelease_count": 0,
       "deprecated_count": 0
     },
     "GMImage": {
@@ -96,7 +96,7 @@
         "licensed": 11,
         "unknown_license": 0
       },
-      "prerelease_count": 2,
+      "prerelease_count": 0,
       "deprecated_count": 8
     },
     "FM": {
@@ -220,6 +220,17 @@
       "prerelease_count": 0,
       "deprecated_count": 0
     },
+    "ClearErrors": {
+      "file": "references/group-06.json",
+      "function_count": 1,
+      "status_counts": {
+        "free": 1,
+        "licensed": 0,
+        "unknown_license": 0
+      },
+      "prerelease_count": 0,
+      "deprecated_count": 0
+    },
     "ContinuityCamera": {
       "file": "references/group-06.json",
       "function_count": 10,
@@ -232,17 +243,6 @@
       "deprecated_count": 0
     },
     "IsMacOS": {
-      "file": "references/group-06.json",
-      "function_count": 1,
-      "status_counts": {
-        "free": 1,
-        "licensed": 0,
-        "unknown_license": 0
-      },
-      "prerelease_count": 0,
-      "deprecated_count": 0
-    },
-    "IsMobile": {
       "file": "references/group-06.json",
       "function_count": 1,
       "status_counts": {
@@ -374,6 +374,17 @@
       "prerelease_count": 0,
       "deprecated_count": 0
     },
+    "CGPSConverter": {
+      "file": "references/group-07.json",
+      "function_count": 1,
+      "status_counts": {
+        "free": 1,
+        "licensed": 0,
+        "unknown_license": 0
+      },
+      "prerelease_count": 0,
+      "deprecated_count": 1
+    },
     "CoreML": {
       "file": "references/group-07.json",
       "function_count": 20,
@@ -445,17 +456,6 @@
       "function_count": 14,
       "status_counts": {
         "free": 14,
-        "licensed": 0,
-        "unknown_license": 0
-      },
-      "prerelease_count": 0,
-      "deprecated_count": 0
-    },
-    "IsIOS": {
-      "file": "references/group-07.json",
-      "function_count": 1,
-      "status_counts": {
-        "free": 1,
         "licensed": 0,
         "unknown_license": 0
       },
@@ -899,7 +899,7 @@
         "licensed": 52,
         "unknown_license": 2
       },
-      "prerelease_count": 3,
+      "prerelease_count": 0,
       "deprecated_count": 0
     },
     "MouseCursor": {
@@ -1023,28 +1023,6 @@
       "prerelease_count": 0,
       "deprecated_count": 0
     },
-    "GetSystemUIModeOptions": {
-      "file": "references/group-11.json",
-      "function_count": 1,
-      "status_counts": {
-        "free": 0,
-        "licensed": 1,
-        "unknown_license": 0
-      },
-      "prerelease_count": 0,
-      "deprecated_count": 0
-    },
-    "GZipFile": {
-      "file": "references/group-11.json",
-      "function_count": 2,
-      "status_counts": {
-        "free": 0,
-        "licensed": 2,
-        "unknown_license": 0
-      },
-      "prerelease_count": 0,
-      "deprecated_count": 0
-    },
     "HotKey": {
       "file": "references/group-11.json",
       "function_count": 29,
@@ -1062,6 +1040,28 @@
       "status_counts": {
         "free": 8,
         "licensed": 12,
+        "unknown_license": 0
+      },
+      "prerelease_count": 0,
+      "deprecated_count": 0
+    },
+    "IsMobile": {
+      "file": "references/group-11.json",
+      "function_count": 1,
+      "status_counts": {
+        "free": 1,
+        "licensed": 0,
+        "unknown_license": 0
+      },
+      "prerelease_count": 0,
+      "deprecated_count": 0
+    },
+    "IsRuntime": {
+      "file": "references/group-11.json",
+      "function_count": 1,
+      "status_counts": {
+        "free": 1,
+        "licensed": 0,
         "unknown_license": 0
       },
       "prerelease_count": 0,
@@ -1086,19 +1086,8 @@
         "licensed": 93,
         "unknown_license": 3
       },
-      "prerelease_count": 12,
-      "deprecated_count": 3
-    },
-    "Msgbox": {
-      "file": "references/group-11.json",
-      "function_count": 1,
-      "status_counts": {
-        "free": 1,
-        "licensed": 0,
-        "unknown_license": 0
-      },
       "prerelease_count": 0,
-      "deprecated_count": 0
+      "deprecated_count": 3
     },
     "NSEventFilter": {
       "file": "references/group-11.json",
@@ -1141,7 +1130,18 @@
         "licensed": 6,
         "unknown_license": 0
       },
-      "prerelease_count": 2,
+      "prerelease_count": 0,
+      "deprecated_count": 0
+    },
+    "StoreRegistration": {
+      "file": "references/group-11.json",
+      "function_count": 1,
+      "status_counts": {
+        "free": 1,
+        "licensed": 0,
+        "unknown_license": 0
+      },
+      "prerelease_count": 0,
       "deprecated_count": 0
     },
     "UUID": {
@@ -1210,18 +1210,18 @@
       "prerelease_count": 0,
       "deprecated_count": 0
     },
-    "IsClient": {
+    "GetSystemUIModeOptions": {
       "file": "references/group-12.json",
       "function_count": 1,
       "status_counts": {
-        "free": 1,
-        "licensed": 0,
+        "free": 0,
+        "licensed": 1,
         "unknown_license": 0
       },
       "prerelease_count": 0,
       "deprecated_count": 0
     },
-    "IsIOSSimulator": {
+    "Msgbox": {
       "file": "references/group-12.json",
       "function_count": 1,
       "status_counts": {
@@ -1364,17 +1364,6 @@
       "prerelease_count": 0,
       "deprecated_count": 0
     },
-    "CGPSConverter": {
-      "file": "references/group-13.json",
-      "function_count": 1,
-      "status_counts": {
-        "free": 1,
-        "licensed": 0,
-        "unknown_license": 0
-      },
-      "prerelease_count": 0,
-      "deprecated_count": 1
-    },
     "DragDrop": {
       "file": "references/group-13.json",
       "function_count": 53,
@@ -1413,6 +1402,17 @@
       "function_count": 97,
       "status_counts": {
         "free": 97,
+        "licensed": 0,
+        "unknown_license": 0
+      },
+      "prerelease_count": 0,
+      "deprecated_count": 0
+    },
+    "IsClient": {
+      "file": "references/group-13.json",
+      "function_count": 1,
+      "status_counts": {
+        "free": 1,
         "licensed": 0,
         "unknown_license": 0
       },
@@ -1562,18 +1562,18 @@
       "prerelease_count": 0,
       "deprecated_count": 0
     },
-    "GetSystemUIMode": {
+    "IsError": {
       "file": "references/group-14.json",
       "function_count": 1,
       "status_counts": {
-        "free": 0,
-        "licensed": 1,
+        "free": 1,
+        "licensed": 0,
         "unknown_license": 0
       },
       "prerelease_count": 0,
       "deprecated_count": 0
     },
-    "IsError": {
+    "IsLinux": {
       "file": "references/group-14.json",
       "function_count": 1,
       "status_counts": {
@@ -1702,16 +1702,16 @@
         "licensed": 1,
         "unknown_license": 0
       },
-      "prerelease_count": 3,
+      "prerelease_count": 0,
       "deprecated_count": 0
     },
-    "CNGroup": {
+    "CompileDate": {
       "file": "references/group-15.json",
       "function_count": 1,
       "status_counts": {
-        "free": 0,
+        "free": 1,
         "licensed": 0,
-        "unknown_license": 1
+        "unknown_license": 0
       },
       "prerelease_count": 0,
       "deprecated_count": 0
@@ -1749,17 +1749,6 @@
       "prerelease_count": 0,
       "deprecated_count": 0
     },
-    "EventMonitor": {
-      "file": "references/group-15.json",
-      "function_count": 10,
-      "status_counts": {
-        "free": 4,
-        "licensed": 6,
-        "unknown_license": 0
-      },
-      "prerelease_count": 0,
-      "deprecated_count": 0
-    },
     "Hash": {
       "file": "references/group-15.json",
       "function_count": 15,
@@ -1771,12 +1760,12 @@
       "prerelease_count": 0,
       "deprecated_count": 0
     },
-    "Is64bit": {
+    "IBAN": {
       "file": "references/group-15.json",
-      "function_count": 1,
+      "function_count": 7,
       "status_counts": {
-        "free": 1,
-        "licensed": 0,
+        "free": 0,
+        "licensed": 7,
         "unknown_license": 0
       },
       "prerelease_count": 0,
@@ -1793,23 +1782,34 @@
       "prerelease_count": 0,
       "deprecated_count": 0
     },
-    "Notification": {
+    "LCMS": {
       "file": "references/group-15.json",
-      "function_count": 6,
+      "function_count": 1,
       "status_counts": {
-        "free": 0,
-        "licensed": 6,
+        "free": 1,
+        "licensed": 0,
         "unknown_license": 0
       },
       "prerelease_count": 0,
       "deprecated_count": 0
     },
-    "ScreenshotRect": {
+    "MarkDown": {
       "file": "references/group-15.json",
-      "function_count": 1,
+      "function_count": 9,
+      "status_counts": {
+        "free": 2,
+        "licensed": 7,
+        "unknown_license": 0
+      },
+      "prerelease_count": 0,
+      "deprecated_count": 0
+    },
+    "QuartzFilterManager": {
+      "file": "references/group-15.json",
+      "function_count": 3,
       "status_counts": {
         "free": 0,
-        "licensed": 1,
+        "licensed": 3,
         "unknown_license": 0
       },
       "prerelease_count": 0,
@@ -1822,17 +1822,6 @@
         "free": 2,
         "licensed": 36,
         "unknown_license": 4
-      },
-      "prerelease_count": 0,
-      "deprecated_count": 0
-    },
-    "SetSystemUIMode": {
-      "file": "references/group-15.json",
-      "function_count": 1,
-      "status_counts": {
-        "free": 0,
-        "licensed": 1,
-        "unknown_license": 0
       },
       "prerelease_count": 0,
       "deprecated_count": 0
@@ -1892,13 +1881,13 @@
       "prerelease_count": 0,
       "deprecated_count": 0
     },
-    "CompileDate": {
+    "CNGroup": {
       "file": "references/group-16.json",
       "function_count": 1,
       "status_counts": {
-        "free": 1,
+        "free": 0,
         "licensed": 0,
-        "unknown_license": 0
+        "unknown_license": 1
       },
       "prerelease_count": 0,
       "deprecated_count": 0
@@ -1914,18 +1903,18 @@
       "prerelease_count": 0,
       "deprecated_count": 0
     },
-    "IBAN": {
+    "EventMonitor": {
       "file": "references/group-16.json",
-      "function_count": 7,
+      "function_count": 10,
       "status_counts": {
-        "free": 0,
-        "licensed": 7,
+        "free": 4,
+        "licensed": 6,
         "unknown_license": 0
       },
       "prerelease_count": 0,
       "deprecated_count": 0
     },
-    "LCMS": {
+    "IsIOS": {
       "file": "references/group-16.json",
       "function_count": 1,
       "status_counts": {
@@ -1958,23 +1947,12 @@
       "prerelease_count": 0,
       "deprecated_count": 2
     },
-    "MarkDown": {
+    "Notification": {
       "file": "references/group-16.json",
-      "function_count": 9,
-      "status_counts": {
-        "free": 2,
-        "licensed": 7,
-        "unknown_license": 0
-      },
-      "prerelease_count": 0,
-      "deprecated_count": 0
-    },
-    "QuartzFilterManager": {
-      "file": "references/group-16.json",
-      "function_count": 3,
+      "function_count": 6,
       "status_counts": {
         "free": 0,
-        "licensed": 3,
+        "licensed": 6,
         "unknown_license": 0
       },
       "prerelease_count": 0,
@@ -1986,6 +1964,28 @@
       "status_counts": {
         "free": 6,
         "licensed": 38,
+        "unknown_license": 0
+      },
+      "prerelease_count": 0,
+      "deprecated_count": 0
+    },
+    "ScreenshotRect": {
+      "file": "references/group-16.json",
+      "function_count": 1,
+      "status_counts": {
+        "free": 0,
+        "licensed": 1,
+        "unknown_license": 0
+      },
+      "prerelease_count": 0,
+      "deprecated_count": 0
+    },
+    "SetSystemUIMode": {
+      "file": "references/group-16.json",
+      "function_count": 1,
+      "status_counts": {
+        "free": 0,
+        "licensed": 1,
         "unknown_license": 0
       },
       "prerelease_count": 0,
@@ -2021,7 +2021,7 @@
         "licensed": 101,
         "unknown_license": 0
       },
-      "prerelease_count": 1,
+      "prerelease_count": 0,
       "deprecated_count": 10
     },
     "WindowsML": {
@@ -2079,18 +2079,29 @@
       "prerelease_count": 0,
       "deprecated_count": 0
     },
-    "IsLinux": {
+    "GetSystemUIMode": {
       "file": "references/group-17.json",
       "function_count": 1,
       "status_counts": {
-        "free": 1,
-        "licensed": 0,
+        "free": 0,
+        "licensed": 1,
         "unknown_license": 0
       },
       "prerelease_count": 0,
       "deprecated_count": 0
     },
-    "IsRuntime": {
+    "GZipFile": {
+      "file": "references/group-17.json",
+      "function_count": 2,
+      "status_counts": {
+        "free": 0,
+        "licensed": 2,
+        "unknown_license": 0
+      },
+      "prerelease_count": 0,
+      "deprecated_count": 0
+    },
+    "IsIOSDevice": {
       "file": "references/group-17.json",
       "function_count": 1,
       "status_counts": {
@@ -2109,7 +2120,7 @@
         "licensed": 10,
         "unknown_license": 0
       },
-      "prerelease_count": 5,
+      "prerelease_count": 0,
       "deprecated_count": 0
     },
     "Matrix": {
@@ -2167,17 +2178,6 @@
       "prerelease_count": 0,
       "deprecated_count": 0
     },
-    "StoreRegistration": {
-      "file": "references/group-17.json",
-      "function_count": 1,
-      "status_counts": {
-        "free": 1,
-        "licensed": 0,
-        "unknown_license": 0
-      },
-      "prerelease_count": 0,
-      "deprecated_count": 0
-    },
     "SystemInfo": {
       "file": "references/group-17.json",
       "function_count": 87,
@@ -2186,7 +2186,7 @@
         "licensed": 1,
         "unknown_license": 0
       },
-      "prerelease_count": 1,
+      "prerelease_count": 0,
       "deprecated_count": 18
     },
     "WMFP": {
@@ -2206,17 +2206,6 @@
       "status_counts": {
         "free": 2,
         "licensed": 15,
-        "unknown_license": 0
-      },
-      "prerelease_count": 0,
-      "deprecated_count": 0
-    },
-    "ClearErrors": {
-      "file": "references/group-18.json",
-      "function_count": 1,
-      "status_counts": {
-        "free": 1,
-        "licensed": 0,
         "unknown_license": 0
       },
       "prerelease_count": 0,
@@ -2273,6 +2262,17 @@
         "free": 34,
         "licensed": 15,
         "unknown_license": 1
+      },
+      "prerelease_count": 0,
+      "deprecated_count": 0
+    },
+    "Is64bit": {
+      "file": "references/group-18.json",
+      "function_count": 1,
+      "status_counts": {
+        "free": 1,
+        "licensed": 0,
+        "unknown_license": 0
       },
       "prerelease_count": 0,
       "deprecated_count": 0
@@ -2442,7 +2442,7 @@
       "prerelease_count": 0,
       "deprecated_count": 0
     },
-    "IsIOSDevice": {
+    "IsIOSSimulator": {
       "file": "references/group-19.json",
       "function_count": 1,
       "status_counts": {
@@ -2670,7 +2670,7 @@
         "licensed": 27,
         "unknown_license": 0
       },
-      "prerelease_count": 1,
+      "prerelease_count": 0,
       "deprecated_count": 0
     },
     "SerialPort": {
@@ -2681,7 +2681,7 @@
         "licensed": 12,
         "unknown_license": 0
       },
-      "prerelease_count": 1,
+      "prerelease_count": 0,
       "deprecated_count": 0
     },
     "ServiceProvider": {

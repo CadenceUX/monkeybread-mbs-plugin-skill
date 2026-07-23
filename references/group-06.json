@@ -1825,6 +1825,44 @@
         }
       ]
     },
+    "ClearErrors": {
+      "component": "ClearErrors",
+      "function_count": 1,
+      "status_counts": {
+        "free": 1,
+        "licensed": 0,
+        "unknown_license": 0
+      },
+      "prerelease_count": 0,
+      "deprecated_count": 0,
+      "requires_addon": null,
+      "functions": [
+        {
+          "name": "ClearErrors",
+          "signature": "MBS( \"ClearErrors\" )",
+          "description": "Clears error counter. Call this on the beginning of a script where you like to track errors.",
+          "parameters": [],
+          "result": "Returns OK or error.",
+          "version_introduced": "12.2",
+          "prerelease": false,
+          "deprecated": false,
+          "compatibility": {
+            "macos": true,
+            "windows": true,
+            "linux": true,
+            "server": true,
+            "ios_sdk": true
+          },
+          "examples": [],
+          "see_also": [
+            "AddToErrorLog",
+            "ErrorLog"
+          ],
+          "status": "free",
+          "url": "https://www.mbsplugins.eu/ClearErrors.md"
+        }
+      ]
+    },
     "ContinuityCamera": {
       "component": "ContinuityCamera",
       "function_count": 10,
@@ -2250,44 +2288,6 @@
           ],
           "status": "free",
           "url": "https://www.mbsplugins.eu/IsMacOS.md"
-        }
-      ]
-    },
-    "IsMobile": {
-      "component": "IsMobile",
-      "function_count": 1,
-      "status_counts": {
-        "free": 1,
-        "licensed": 0,
-        "unknown_license": 0
-      },
-      "prerelease_count": 0,
-      "deprecated_count": 0,
-      "requires_addon": null,
-      "functions": [
-        {
-          "name": "IsMobile",
-          "signature": "MBS( \"IsMobile\" )",
-          "description": "Whether plugin runs on a mobile target. Value is 1 if running in iOS SDK app.",
-          "parameters": [],
-          "result": "Returns 0 or 1.",
-          "version_introduced": "7.2",
-          "prerelease": false,
-          "deprecated": false,
-          "compatibility": {
-            "macos": true,
-            "windows": true,
-            "linux": true,
-            "server": true,
-            "ios_sdk": true
-          },
-          "examples": [],
-          "see_also": [
-            "IsRegistered",
-            "Register"
-          ],
-          "status": "free",
-          "url": "https://www.mbsplugins.eu/IsMobile.md"
         }
       ]
     },

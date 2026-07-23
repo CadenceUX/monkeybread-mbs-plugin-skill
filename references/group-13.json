@@ -1344,60 +1344,6 @@
         }
       ]
     },
-    "CGPSConverter": {
-      "component": "CGPSConverter",
-      "function_count": 1,
-      "status_counts": {
-        "free": 1,
-        "licensed": 0,
-        "unknown_license": 0
-      },
-      "prerelease_count": 0,
-      "deprecated_count": 1,
-      "requires_addon": null,
-      "functions": [
-        {
-          "name": "CGPSConverter.Convert",
-          "signature": "MBS( \"CGPSConverter.Convert\"; PSContainer { ; Name; DontRenderPreview } )",
-          "description": "Converts PostScript to PDF. Won't work with Future FileMaker versions in macOS Sonoma since Apple removed the feature from the OS.",
-          "parameters": [
-            {
-              "name": "PSContainer",
-              "description": "A container value with a postscript file data.",
-              "example": null,
-              "optional": false
-            },
-            {
-              "name": "Name",
-              "description": "The file name to use for the PDF.",
-              "example": null,
-              "optional": true
-            },
-            {
-              "name": "DontRenderPreview",
-              "description": "Pass 1 to not create a JPEG with preview of first page as part of the container.",
-              "example": "0",
-              "optional": true
-            }
-          ],
-          "result": "A container value with PDF data.",
-          "version_introduced": "2.4",
-          "prerelease": false,
-          "deprecated": true,
-          "compatibility": {
-            "macos": true,
-            "windows": false,
-            "linux": false,
-            "server": true,
-            "ios_sdk": false
-          },
-          "examples": [],
-          "see_also": [],
-          "status": "free",
-          "url": "https://www.mbsplugins.eu/CGPSConverterConvert.md"
-        }
-      ]
-    },
     "DragDrop": {
       "component": "DragDrop",
       "function_count": 53,
@@ -7859,6 +7805,51 @@
           "see_also": [],
           "status": "free",
           "url": "https://www.mbsplugins.eu/GameKitShowChallengeComposeDialog.md"
+        }
+      ]
+    },
+    "IsClient": {
+      "component": "IsClient",
+      "function_count": 1,
+      "status_counts": {
+        "free": 1,
+        "licensed": 0,
+        "unknown_license": 0
+      },
+      "prerelease_count": 0,
+      "deprecated_count": 0,
+      "requires_addon": null,
+      "functions": [
+        {
+          "name": "IsClient",
+          "signature": "MBS( \"IsClient\" )",
+          "description": "Checks if plugin is running on a client. Returns 0 if running on a server. See also IsRegistered , IsRuntime and IsServer .",
+          "parameters": [],
+          "result": "Returns 1 on client or 0 elsewhere.",
+          "version_introduced": "4.3",
+          "prerelease": false,
+          "deprecated": false,
+          "compatibility": {
+            "macos": true,
+            "windows": true,
+            "linux": true,
+            "server": true,
+            "ios_sdk": true
+          },
+          "examples": [
+            {
+              "label": "Run on client:",
+              "text_code": "If [\nMBS\n( \"IsClient\" )]\n# runs on client\nElse\n# runs on server or where no plugin is installed\nEnd If\nRun on client:",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>If [MBS( \"IsClient\" )]\n\t# runs on client\nElse\n\t# runs on server or where no plugin is installed\nEnd If</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
+            }
+          ],
+          "see_also": [
+            "DynaPDF.Initialize",
+            "IsRegistered",
+            "Register"
+          ],
+          "status": "free",
+          "url": "https://www.mbsplugins.eu/IsClient.md"
         }
       ]
     },

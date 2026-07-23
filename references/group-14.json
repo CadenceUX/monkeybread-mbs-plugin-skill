@@ -6269,43 +6269,6 @@
         }
       ]
     },
-    "GetSystemUIMode": {
-      "component": "GetSystemUIMode",
-      "function_count": 1,
-      "status_counts": {
-        "free": 0,
-        "licensed": 1,
-        "unknown_license": 0
-      },
-      "prerelease_count": 0,
-      "deprecated_count": 0,
-      "requires_addon": null,
-      "functions": [
-        {
-          "name": "GetSystemUIMode",
-          "signature": "MBS( \"GetSystemUIMode\" )",
-          "description": "Queries the current system UI mode. See the SetSystemUIMode function for details on the possible values.",
-          "parameters": [],
-          "result": "The current mode value.",
-          "version_introduced": "2.1",
-          "prerelease": false,
-          "deprecated": false,
-          "compatibility": {
-            "macos": true,
-            "windows": false,
-            "linux": false,
-            "server": false,
-            "ios_sdk": false
-          },
-          "examples": [],
-          "see_also": [
-            "SetSystemUIMode"
-          ],
-          "status": "licensed",
-          "url": "https://www.mbsplugins.eu/GetSystemUIMode.md"
-        }
-      ]
-    },
     "IsError": {
       "component": "IsError",
       "function_count": 1,
@@ -6355,6 +6318,49 @@
           ],
           "status": "free",
           "url": "https://www.mbsplugins.eu/IsError.md"
+        }
+      ]
+    },
+    "IsLinux": {
+      "component": "IsLinux",
+      "function_count": 1,
+      "status_counts": {
+        "free": 1,
+        "licensed": 0,
+        "unknown_license": 0
+      },
+      "prerelease_count": 0,
+      "deprecated_count": 0,
+      "requires_addon": null,
+      "functions": [
+        {
+          "name": "IsLinux",
+          "signature": "MBS( \"IsLinux\" )",
+          "description": "Whether we run on Linux. Returns 1 if running on Linux and 0 if not. For FileMaker 14 and older this is definitive always 0. Returns 1 on FileMaker Cloud as this uses a 64-bit Linux.",
+          "parameters": [],
+          "result": "Returns 1, 0 or error.",
+          "version_introduced": "6.1",
+          "prerelease": false,
+          "deprecated": false,
+          "compatibility": {
+            "macos": true,
+            "windows": true,
+            "linux": true,
+            "server": true,
+            "ios_sdk": true
+          },
+          "examples": [],
+          "see_also": [
+            "Barcode.LoadLibrary",
+            "CURL.SetOptionCAInfo",
+            "IsMacOS",
+            "IsWindows",
+            "Saxon.Load",
+            "XL.Initialize",
+            "XL.IsInitialized"
+          ],
+          "status": "free",
+          "url": "https://www.mbsplugins.eu/IsLinux.md"
         }
       ]
     },

@@ -8,7 +8,7 @@
         "licensed": 1,
         "unknown_license": 0
       },
-      "prerelease_count": 3,
+      "prerelease_count": 0,
       "deprecated_count": 0,
       "requires_addon": null,
       "functions": [
@@ -75,7 +75,7 @@
           "parameters": [],
           "result": "Returns JSON or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
@@ -124,7 +124,7 @@
           "parameters": [],
           "result": "Returns list or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
@@ -154,7 +154,7 @@
           ],
           "result": "Returns OK or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
@@ -286,53 +286,58 @@
         }
       ]
     },
-    "CNGroup": {
-      "component": "CNGroup",
+    "CompileDate": {
+      "component": "CompileDate",
       "function_count": 1,
       "status_counts": {
-        "free": 0,
+        "free": 1,
         "licensed": 0,
-        "unknown_license": 1
+        "unknown_license": 0
       },
       "prerelease_count": 0,
       "deprecated_count": 0,
       "requires_addon": null,
       "functions": [
         {
-          "name": "CNGroup.Name",
-          "signature": "MBS( \"CNGroup.Name\"; GroupIdentifier )",
-          "description": "Queries group name.",
-          "parameters": [
-            {
-              "name": "GroupIdentifier",
-              "description": "The group identifier. Can be identifier or group name.",
-              "example": "\"F527BF7C-6426-4D48-86CA-CB5E57743FFE:ABGroup\"",
-              "optional": false
-            }
-          ],
-          "result": "Returns text or error.",
-          "version_introduced": "8.4",
+          "name": "CompileDate",
+          "signature": "MBS( \"CompileDate\" )",
+          "description": "Returns the date the plug-in was compiled. Useful for determining if when the currently installed plug-in was released. See Plugin.CompileDate to get a FileMaker date instead of a text. Format of this text is \"mmm DD YYYY\" with month as three letter text in English.",
+          "parameters": [],
+          "result": "The date as text.",
+          "version_introduced": "1.0",
           "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
-            "windows": false,
-            "linux": false,
-            "server": false,
+            "windows": true,
+            "linux": true,
+            "server": true,
             "ios_sdk": true
           },
           "examples": [
             {
-              "label": "Queries group names:",
-              "text_code": "While(\n[\nnames = \"\";\n// query list of group IDs\nlist =\nMBS\n( \"\nCNContactStore.Groups\n\" );\ncount = ValueCount(list);\nindex = 1\n] ;\nindex ≤ count ;\n[\nid = GetValue(list; index);\n// query name for each ID\nname =\nMBS\n( \"CNGroup.Name\"; id);\nnames = names & id & \" -> \" & name & ¶;\nindex = index + 1\n] ;\n// return all the names\nnames )\nQueries group names:\nExample result:\n009ACB1E-1A27-444B-1000-43EC9B2F420B:ABGroup -> Christmas Cards\n036104A1-BFD4-498C-2E55-BC6E442F7265:ABGroup -> Friends\n391726FA-6B46-479E-38F5-E4B187809300:ABGroup -> Family\n7A47A8BC-FA88-47CB-4CB2-5A1A1290ED94:ABGroup -> Work",
-              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>While( \n[ \n\tnames = \"\"; \n\t// query list of group IDs\n\tlist = MBS( \"CNContactStore.Groups\" ); \n\tcount = ValueCount(list); \n\tindex = 1\n] ; \n\tindex ≤ count ; \n[ \n\tid = GetValue(list; index); \n\t// query name for each ID\n\tname = MBS( \"CNGroup.Name\"; id); \n\tnames = names &amp; id &amp; \" -&gt; \" &amp; name &amp; ¶; \n\tindex = index + 1 \n] ; \n// return all the names\nnames )</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
+              "label": "Get the Compile Date and Time:",
+              "text_code": "$r\n=\nMBS\n(\"CompileDate\") & \" \" &\nMBS\n(\"CompileTime\")\nGet the Compile Date and Time:",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS(\"CompileDate\") &amp; \" \" &amp; MBS(\"CompileTime\")</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
+            },
+            {
+              "label": "Get year:",
+              "text_code": "Let([\nyear = GetAsNumber(Middle(\nMBS\n( \"CompileDate\" );7;6))\n]; year)\nGet year:",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>Let([\n year = GetAsNumber(Middle(MBS( \"CompileDate\" );7;6))\n]; year)</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
+            },
+            {
+              "label": "Remind to update plugin:",
+              "text_code": "If [ GetAsNumber(Middle(\nMBS\n( \"CompileDate\" );7;6)) < Year ( Get(CurrentDate )) and Month ( Get(CurrentDate )) > 3 ]\nShow Custom Dialog [ \"Your\nMBS\nPlugin could be updated”. ; \"It's spring and you use plugin from last year?\" ]\nEnd If\nRemind to update plugin:",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>If [ GetAsNumber(Middle(MBS( \"CompileDate\" );7;6)) &lt; Year ( Get(CurrentDate )) and Month ( Get(CurrentDate )) &gt; 3 ] \n\tShow Custom Dialog [ \"Your MBS Plugin could be updated”. ; \"It's spring and you use plugin from last year?\" ] \nEnd If</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
             }
           ],
           "see_also": [
-            "CNContactStore.Groups"
+            "CompileTime",
+            "Plugin.CompileDate",
+            "Plugin.IsMaintenanceExpired"
           ],
-          "status": "unknown_license",
-          "url": "https://www.mbsplugins.eu/CNGroupName.md"
+          "status": "free",
+          "url": "https://www.mbsplugins.eu/CompileDate.md"
         }
       ]
     },
@@ -4490,379 +4495,6 @@
         }
       ]
     },
-    "EventMonitor": {
-      "component": "EventMonitor",
-      "function_count": 10,
-      "status_counts": {
-        "free": 4,
-        "licensed": 6,
-        "unknown_license": 0
-      },
-      "prerelease_count": 0,
-      "deprecated_count": 0,
-      "requires_addon": null,
-      "functions": [
-        {
-          "name": "EventMonitor.Clear",
-          "signature": "MBS( \"EventMonitor.Clear\" )",
-          "description": "Clears last event captured. You should not need to call this, except maybe on the end of the script to make sure you clear the last event for next script call. This includes which button was last clicked. Plugin version 9.4 also forgets whether it was a double click.",
-          "parameters": [],
-          "result": "Returns OK or error.",
-          "version_introduced": "5.2",
-          "prerelease": false,
-          "deprecated": false,
-          "compatibility": {
-            "macos": true,
-            "windows": true,
-            "linux": false,
-            "server": false,
-            "ios_sdk": false
-          },
-          "examples": [],
-          "see_also": [
-            "EventMonitor.ClearCardWindow",
-            "EventMonitor.SetCardWindow"
-          ],
-          "status": "licensed",
-          "url": "https://www.mbsplugins.eu/EventMonitorClear.md"
-        },
-        {
-          "name": "EventMonitor.ClearCardWindow",
-          "signature": "MBS( \"EventMonitor.ClearCardWindow\" )",
-          "description": "Clears trigger for card window. Please call in close trigger for the card layout and in script triggered by EventMonitor.SetCardWindow .",
-          "parameters": [],
-          "result": "Returns OK or error.",
-          "version_introduced": "7.3",
-          "prerelease": false,
-          "deprecated": false,
-          "compatibility": {
-            "macos": true,
-            "windows": true,
-            "linux": false,
-            "server": false,
-            "ios_sdk": false
-          },
-          "examples": [
-            {
-              "label": "Close script:",
-              "text_code": "Close Window [ Name: \"Card\" ; Current file ]\nSet Variable [\n$r\n; Value:\nMBS\n(\"EventMonitor.ClearCardWindow\") ]\nClose script:",
-              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"121\" name=\"Close Window\">\n    <LimitToWindowsOfCurrentFile state=\"True\"/>\n    <Window value=\"ByName\"/>\n    <Name>\n      <Calculation>\"Card\"</Calculation>\n    </Name>\n  </Step>\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS(\"EventMonitor.ClearCardWindow\") </Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
-            }
-          ],
-          "see_also": [
-            "EventMonitor.Clear",
-            "EventMonitor.SetCardWindow"
-          ],
-          "status": "licensed",
-          "url": "https://www.mbsplugins.eu/EventMonitorClearCardWindow.md"
-        },
-        {
-          "name": "EventMonitor.GetEnabled",
-          "signature": "MBS( \"EventMonitor.GetEnabled\" )",
-          "description": "Queries whether event monitor is enabled. Returns 1 if enabled and 0 if disabled.",
-          "parameters": [],
-          "result": "Returns value or error.",
-          "version_introduced": "6.3",
-          "prerelease": false,
-          "deprecated": false,
-          "compatibility": {
-            "macos": true,
-            "windows": true,
-            "linux": false,
-            "server": false,
-            "ios_sdk": false
-          },
-          "examples": [],
-          "see_also": [
-            "EventMonitor.SetEnabled"
-          ],
-          "status": "free",
-          "url": "https://www.mbsplugins.eu/EventMonitorGetEnabled.md"
-        },
-        {
-          "name": "EventMonitor.Install",
-          "signature": "MBS( \"EventMonitor.Install\" )",
-          "description": "Installs event monitor. This allows the plugin to keep track of mouse events, so the EventMonitor.LastMouseClickButton function can know what mouse button was pressed.",
-          "parameters": [],
-          "result": "Returns OK or error.",
-          "version_introduced": "5.2",
-          "prerelease": false,
-          "deprecated": false,
-          "compatibility": {
-            "macos": true,
-            "windows": true,
-            "linux": false,
-            "server": false,
-            "ios_sdk": false
-          },
-          "examples": [],
-          "see_also": [
-            "EventMonitor.LastMouseClickButton",
-            "EventMonitor.LastMouseClickIsDoubleClick",
-            "EventMonitor.LastMousePositionX",
-            "EventMonitor.LastMousePositionY",
-            "EventMonitor.SetCardWindow",
-            "EventMonitor.SetEnabled",
-            "SystemInfo.IdleTime"
-          ],
-          "status": "licensed",
-          "url": "https://www.mbsplugins.eu/EventMonitorInstall.md"
-        },
-        {
-          "name": "EventMonitor.LastMouseClickButton",
-          "signature": "MBS( \"EventMonitor.LastMouseClickButton\" )",
-          "description": "Queries the index of the last pressed mouse button. Returns 1 for left, 2 for right and 3 for other. (other is Mac only currently) Please call EventMonitor.Install earlier in your scripts once on startup of solution. Call this function in a script triggered by a mouse click (e.g. on a button) to see if mouse event triggering the script was using right or left mouse button. See also RemoteControl.MouseButtons function for live status of mouse. With v12.5 this function may also return 4 and 5 for mouse buttons.",
-          "parameters": [],
-          "result": "Returns number or error.",
-          "version_introduced": "5.2",
-          "prerelease": false,
-          "deprecated": false,
-          "compatibility": {
-            "macos": true,
-            "windows": true,
-            "linux": false,
-            "server": false,
-            "ios_sdk": false
-          },
-          "examples": [],
-          "see_also": [
-            "EventMonitor.Install",
-            "EventMonitor.LastMousePositionX",
-            "EventMonitor.LastMousePositionY",
-            "Menu.PopUp",
-            "RemoteControl.MouseButtons",
-            "RemoteControl.MouseX",
-            "RemoteControl.MouseY"
-          ],
-          "status": "licensed",
-          "url": "https://www.mbsplugins.eu/EventMonitorLastMouseClickButton.md"
-        },
-        {
-          "name": "EventMonitor.LastMouseClickIsDoubleClick",
-          "signature": "MBS( \"EventMonitor.LastMouseClickIsDoubleClick\" )",
-          "description": "Queries if last recognized mouse click is a double click. Returns 0 for single click and 1 for double click. Please call EventMonitor.Install earlier in your scripts once on startup of solution. Call this function in a script triggered by a mouse click (e.g. on a button) to see if mouse event triggering the script was a double click.",
-          "parameters": [],
-          "result": "Returns 0, 1 or error.",
-          "version_introduced": "5.2",
-          "prerelease": false,
-          "deprecated": false,
-          "compatibility": {
-            "macos": true,
-            "windows": true,
-            "linux": false,
-            "server": false,
-            "ios_sdk": false
-          },
-          "examples": [],
-          "see_also": [
-            "EventMonitor.Install"
-          ],
-          "status": "licensed",
-          "url": "https://www.mbsplugins.eu/EventMonitorLastMouseClickIsDoubleClick.md"
-        },
-        {
-          "name": "EventMonitor.LastMousePositionX",
-          "signature": "MBS( \"EventMonitor.LastMousePositionX\"; PerWindow )",
-          "description": "Queries last mouse position. Relative to top/left of main screen. Please call EventMonitor.Install earlier in your scripts once on startup of solution. See also RemoteControl.MouseX .",
-          "parameters": [
-            {
-              "name": "PerWindow",
-              "description": "Pass 1 to get coordinates relative to the window at mouse position (Mac) or front window (Win). Or pass 0 to get screen coordinates. (default)",
-              "example": "1",
-              "optional": false
-            }
-          ],
-          "result": "Returns value or error.",
-          "version_introduced": "7.3",
-          "prerelease": false,
-          "deprecated": false,
-          "compatibility": {
-            "macos": true,
-            "windows": true,
-            "linux": false,
-            "server": false,
-            "ios_sdk": false
-          },
-          "examples": [],
-          "see_also": [
-            "EventMonitor.Install",
-            "EventMonitor.LastMouseClickButton",
-            "EventMonitor.LastMousePositionY",
-            "RemoteControl.MouseX"
-          ],
-          "status": "free",
-          "url": "https://www.mbsplugins.eu/EventMonitorLastMousePositionX.md"
-        },
-        {
-          "name": "EventMonitor.LastMousePositionY",
-          "signature": "MBS( \"EventMonitor.LastMousePositionY\"; PerWindow )",
-          "description": "Queries last mouse position. Relative to top/left of main screen. Please call EventMonitor.Install earlier in your scripts once on startup of solution. See also RemoteControl.MouseY .",
-          "parameters": [
-            {
-              "name": "PerWindow",
-              "description": "Pass 1 to get coordinates relative to the window at mouse position (Mac) or front window (Win). Or pass 0 to get screen coordinates. (default)",
-              "example": "1",
-              "optional": false
-            }
-          ],
-          "result": "Returns value or error.",
-          "version_introduced": "7.3",
-          "prerelease": false,
-          "deprecated": false,
-          "compatibility": {
-            "macos": true,
-            "windows": true,
-            "linux": false,
-            "server": false,
-            "ios_sdk": false
-          },
-          "examples": [],
-          "see_also": [
-            "EventMonitor.Install",
-            "EventMonitor.LastMouseClickButton",
-            "EventMonitor.LastMousePositionX",
-            "RemoteControl.MouseY"
-          ],
-          "status": "free",
-          "url": "https://www.mbsplugins.eu/EventMonitorLastMousePositionY.md"
-        },
-        {
-          "name": "EventMonitor.SetCardWindow",
-          "signature": "MBS( \"EventMonitor.SetCardWindow\"; WindowRef; X; Y; Width; Height; FileName; ScriptName { ; ScriptParameter; ScriptControl } )",
-          "description": "Sets script trigger for clicks outside card. You can show a card and have the MBS Plugin watch for mouse clicks outside the card area. The plugin can trigger a script. As script triggers are queued up, please make sure you handle various cases like several clicks queue up. Please call EventMonitor.Install once before and make sure it’s enabled. Since we lookup the window size for the card, please don't name your window and the card window the same. With plugin version 6.0 or newer the script name can be a script ID number. In that case the plugin queries the script name for the given script ID. This allows to call scripts by ID and avoid problems if scripts are later renamed. Notice: FileMaker 19.2 adds a fmplugin extended privileges. If you have such an extended privileges to allow the plugin to trigger scripts, you need to grant permissions for it. If such a privilege is not defined, the plugin is allowed to trigger scripts. See FileMaker product documentation for details.",
-          "parameters": [
-            {
-              "name": "WindowRef",
-              "description": "Window Reference is the unique OS level window ID. You can obtain this by using the Window.FindByTitle or Window.FindByIndex functions. Pass zero to access the frontmost window.",
-              "example": "0",
-              "optional": false
-            },
-            {
-              "name": "X",
-              "description": "X position of the card in the parent window. Can be negative for automatic center position.",
-              "example": "-1",
-              "optional": false
-            },
-            {
-              "name": "Y",
-              "description": "Y position of the card in the parent window. Can be negative for automatic center position. You may need to include space for formating, status toolbar and menu bar (inside window on Windows).",
-              "example": "-1",
-              "optional": false
-            },
-            {
-              "name": "Width",
-              "description": "The width of the card window.",
-              "example": "600",
-              "optional": false
-            },
-            {
-              "name": "Height",
-              "description": "The height of the card window.",
-              "example": "400",
-              "optional": false
-            },
-            {
-              "name": "FileName",
-              "description": "The file name where to find the script.",
-              "example": "Get(FileName)",
-              "optional": false
-            },
-            {
-              "name": "ScriptName",
-              "description": "The name of the script to trigger when a click is received outside the card area.",
-              "example": "\"Close Card Script\"",
-              "optional": false
-            },
-            {
-              "name": "ScriptParameter",
-              "description": "The text parameter to pass to the script.",
-              "example": "\"Close\"",
-              "optional": true
-            },
-            {
-              "name": "ScriptControl",
-              "description": "The script control mode. Can be Pause, Halt, Exit or Resume. Default is Pause. May be ignored by FileMaker.",
-              "example": "\"pause\"",
-              "optional": true
-            }
-          ],
-          "result": "Returns OK or error.",
-          "version_introduced": "7.3",
-          "prerelease": false,
-          "deprecated": false,
-          "compatibility": {
-            "macos": true,
-            "windows": true,
-            "linux": false,
-            "server": false,
-            "ios_sdk": false
-          },
-          "examples": [
-            {
-              "label": "Install trigger:",
-              "text_code": "Set Variable [\n$r\n; Value:\nMBS\n( \"\nEventMonitor.Install\n\" ) ]\nSet Variable [\n$$cardShowing\n; Value: 1 ]\nSet Variable [\n$r\n; Value:\nMBS\n( \"EventMonitor.SetCardWindow\"; Get(WindowName); -1; -1; 600; 400; Get(FileName); \"Close Script\" ) ]\nNew Window [ Style: Card ; Name: \"Card\" ; Using layout: “Tabelle” ; Height: 400 ; Width: 600 ]\nInstall trigger:",
-              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS( \"EventMonitor.Install\" ) </Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>1 </Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$$cardShowing</Name>\n  </Step>\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS( \"EventMonitor.SetCardWindow\"; Get(WindowName); -1; -1; 600; 400; Get(FileName); \"Close Script\" ) </Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n  <Step enable=\"True\" id=\"122\" name=\"New Window\">\n    <LayoutDestination value=\"SelectedLayout\"/>\n    <Name>\n      <Calculation>\"Card\"</Calculation>\n    </Name>\n    <Height>\n      <Calculation>400</Calculation>\n    </Height>\n    <Width>\n      <Calculation>600</Calculation>\n    </Width>\n    <NewWndStyles DimParentWindow=\"Yes\" Toolbars=\"No\" MenuBar=\"No\" Style=\"Card\" Close=\"Yes\" Minimize=\"No\" Maximize=\"No\" Resize=\"No\" Styles=\"3222339600\"/>\n    <Layout id=\"10\" name=\"Tabelle\"/>\n  </Step>\n</fmxmlsnippet>"
-            },
-            {
-              "label": "Close script:",
-              "text_code": "If [\n$$cardShowing\n]\nSet Variable [\n$$cardShowing\n; Value: 0 ]\nClose Window [ Name: \"Card\" ; Current file ]\nSet Variable [\n$r\n; Value:\nMBS\n(\"\nEventMonitor.ClearCardWindow\n\") ]\nEnd If\nClose script:",
-              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>If [ $$cardShowing ] \n\tSet Variable [ $$cardShowing ; Value: 0 ] \n\tClose Window [ Name: \"Card\" ; Current file ] \n\tSet Variable [ $r ; Value: MBS(\"EventMonitor.ClearCardWindow\") ] \nEnd If</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
-            }
-          ],
-          "see_also": [
-            "EventMonitor.Clear",
-            "EventMonitor.ClearCardWindow",
-            "EventMonitor.Install",
-            "Window.FindByIndex",
-            "Window.FindByTitle"
-          ],
-          "status": "licensed",
-          "url": "https://www.mbsplugins.eu/EventMonitorSetCardWindow.md"
-        },
-        {
-          "name": "EventMonitor.SetEnabled",
-          "signature": "MBS( \"EventMonitor.SetEnabled\"; Value )",
-          "description": "Enables or disables event monitor. This way you can temporary disable it and later enable it again. You also need to call EventMonitor.Install once.",
-          "parameters": [
-            {
-              "name": "Value",
-              "description": "The new setting. Pass 1 to enable or 0 to disable.",
-              "example": "0",
-              "optional": false
-            }
-          ],
-          "result": "Returns OK or error.",
-          "version_introduced": "6.3",
-          "prerelease": false,
-          "deprecated": false,
-          "compatibility": {
-            "macos": true,
-            "windows": true,
-            "linux": false,
-            "server": false,
-            "ios_sdk": false
-          },
-          "examples": [
-            {
-              "label": "Enable event monitor:",
-              "text_code": "MBS\n(\"EventMonitor.SetEnabled\"; 1)\nEnable event monitor:",
-              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS(\"EventMonitor.SetEnabled\"; 1)</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
-            },
-            {
-              "label": "Disable event monitor:",
-              "text_code": "MBS\n(\"EventMonitor.SetEnabled\"; 0)\nDisable event monitor:",
-              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS(\"EventMonitor.SetEnabled\"; 0)</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
-            }
-          ],
-          "see_also": [
-            "EventMonitor.GetEnabled",
-            "EventMonitor.Install"
-          ],
-          "status": "free",
-          "url": "https://www.mbsplugins.eu/EventMonitorSetEnabled.md"
-        }
-      ]
-    },
     "Hash": {
       "component": "Hash",
       "function_count": 15,
@@ -5896,12 +5528,12 @@
         }
       ]
     },
-    "Is64bit": {
-      "component": "Is64bit",
-      "function_count": 1,
+    "IBAN": {
+      "component": "IBAN",
+      "function_count": 7,
       "status_counts": {
-        "free": 1,
-        "licensed": 0,
+        "free": 0,
+        "licensed": 7,
         "unknown_license": 0
       },
       "prerelease_count": 0,
@@ -5909,12 +5541,19 @@
       "requires_addon": null,
       "functions": [
         {
-          "name": "Is64bit",
-          "signature": "MBS( \"Is64bit\" )",
-          "description": "Checks if platform is 64bit or 32bit. Returns 1 for 64bit (e.g. FileMaker Server 13) or 0 for 32 bit (FileMaker Pro 13) Returns 1 on FileMaker Cloud as this uses a 64-bit Linux. See SystemInfo.Is64bitWindows to check if you are 32-bit Windows app on a 64-bit Windows OS.",
-          "parameters": [],
-          "result": "Returns 1 or 0.",
-          "version_introduced": "5.0",
+          "name": "IBAN.CalcCheckSum",
+          "signature": "MBS( \"IBAN.CalcCheckSum\"; IBAN )",
+          "description": "Calculates the checksum. If you don't know checksum, you can just pass in 00 for the checksum in the IBAN (third and forth character).",
+          "parameters": [
+            {
+              "name": "IBAN",
+              "description": "The IBAN to check.",
+              "example": "\"DE29100100100987654321\"",
+              "optional": false
+            }
+          ],
+          "result": "Returns checksum or error.",
+          "version_introduced": "11.1",
           "prerelease": false,
           "deprecated": false,
           "compatibility": {
@@ -5924,12 +5563,237 @@
             "server": true,
             "ios_sdk": true
           },
-          "examples": [],
-          "see_also": [
-            "SystemInfo.Is64bitWindows"
+          "examples": [
+            {
+              "label": "Calculates the checksum:",
+              "text_code": "MBS\n(\"IBAN.CalcCheckSum\"; \"AD00 0001 2030 2003 5910 0100\")\nCalculates the checksum:\nExample result:\n12",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS(\"IBAN.CalcCheckSum\"; \"AD00 0001 2030 2003 5910 0100\")</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
+            }
           ],
-          "status": "free",
-          "url": "https://www.mbsplugins.eu/Is64bit.md"
+          "see_also": [],
+          "status": "licensed",
+          "url": "https://www.mbsplugins.eu/IBANCalcCheckSum.md"
+        },
+        {
+          "name": "IBAN.Compact",
+          "signature": "MBS( \"IBAN.Compact\"; IBAN )",
+          "description": "Formats the IBAN for compact view. Ignores invalid characters in input, e.g. strip out dots, spaces or dashes.",
+          "parameters": [
+            {
+              "name": "IBAN",
+              "description": "The IBAN to check.",
+              "example": "\"DE29 1001 0010 0987 6543 21!\"",
+              "optional": false
+            }
+          ],
+          "result": "Returns text or error.",
+          "version_introduced": "11.1",
+          "prerelease": false,
+          "deprecated": false,
+          "compatibility": {
+            "macos": true,
+            "windows": true,
+            "linux": true,
+            "server": true,
+            "ios_sdk": true
+          },
+          "examples": [
+            {
+              "label": "Creates compact IBAN:",
+              "text_code": "MBS\n(\"IBAN.Compact\"; \"DE29 1001 0010 0987 6543 21!\")\nCreates compact IBAN:\nExample result:\nDE29100100100987654321",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS(\"IBAN.Compact\"; \"DE29 1001 0010 0987 6543 21!\")</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
+            }
+          ],
+          "see_also": [
+            "JSON.Compact"
+          ],
+          "status": "licensed",
+          "url": "https://www.mbsplugins.eu/IBANCompact.md"
+        },
+        {
+          "name": "IBAN.Countries",
+          "signature": "MBS( \"IBAN.Countries\" )",
+          "description": "Queries list of country codes. The plugin includes a list of over 100 country codes.",
+          "parameters": [],
+          "result": "Returns list or error.",
+          "version_introduced": "11.1",
+          "prerelease": false,
+          "deprecated": false,
+          "compatibility": {
+            "macos": true,
+            "windows": true,
+            "linux": true,
+            "server": true,
+            "ios_sdk": true
+          },
+          "examples": [
+            {
+              "label": "Query examples for each country:",
+              "text_code": "While(\n[\nnames = \"\";\n// query list of countries\nlist =\nMBS\n( \"IBAN.Countries\" );\ncount = ValueCount(list);\nindex = 1\n] ;\nindex ≤ count ;\n[\nCountry = GetValue(list; index);\n// query example for each country\nexample =\nMBS\n( \"\nIBAN.Example\n\"; Country );\nnames = names & Country & \" -> \" & example & ¶;\nindex = index + 1\n] ;\n// return all the names\nnames )\nQuery examples for each country:",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>While( \n[ \n\tnames = \"\"; \n\t// query list of countries\n\tlist = MBS( \"IBAN.Countries\" ); \n\tcount = ValueCount(list); \n\tindex = 1\n] ; \n\tindex ≤ count ; \n[ \n\tCountry = GetValue(list; index); \n\t// query example for each country\n\texample = MBS( \"IBAN.Example\"; Country ); \n\tnames = names &amp; Country &amp; \" -&gt; \" &amp; example &amp; ¶; \n\tindex = index + 1 \n] ; \n// return all the names\nnames )</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
+            }
+          ],
+          "see_also": [
+            "IBAN.Example"
+          ],
+          "status": "licensed",
+          "url": "https://www.mbsplugins.eu/IBANCountries.md"
+        },
+        {
+          "name": "IBAN.Example",
+          "signature": "MBS( \"IBAN.Example\"; Country )",
+          "description": "Queries example IBAN for country.",
+          "parameters": [
+            {
+              "name": "Country",
+              "description": "Pass country code.",
+              "example": "\"DE\"",
+              "optional": false
+            }
+          ],
+          "result": "Returns text or error.",
+          "version_introduced": "11.1",
+          "prerelease": false,
+          "deprecated": false,
+          "compatibility": {
+            "macos": true,
+            "windows": true,
+            "linux": true,
+            "server": true,
+            "ios_sdk": true
+          },
+          "examples": [
+            {
+              "label": "Query examples for each country:",
+              "text_code": "While(\n[\nnames = \"\";\n// query list of countries\nlist =\nMBS\n( \"\nIBAN.Countries\n\" );\ncount = ValueCount(list);\nindex = 1\n] ;\nindex ≤ count ;\n[\nCountry = GetValue(list; index);\n// query example for each country\nexample =\nMBS\n( \"IBAN.Example\"; Country );\nnames = names & Country & \" -> \" & example & ¶;\nindex = index + 1\n] ;\n// return all the names\nnames )\nQuery examples for each country:\nExample result:\nAD -> AD1200012030200359100100\nAE -> AE070331234567890123456\nAL -> AL47212110090000000235698741\n...",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>While( \n[ \n\tnames = \"\"; \n\t// query list of countries\n\tlist = MBS( \"IBAN.Countries\" ); \n\tcount = ValueCount(list); \n\tindex = 1\n] ; \n\tindex ≤ count ; \n[ \n\tCountry = GetValue(list; index); \n\t// query example for each country\n\texample = MBS( \"IBAN.Example\"; Country ); \n\tnames = names &amp; Country &amp; \" -&gt; \" &amp; example &amp; ¶; \n\tindex = index + 1 \n] ; \n// return all the names\nnames )</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
+            }
+          ],
+          "see_also": [
+            "IBAN.Countries"
+          ],
+          "status": "licensed",
+          "url": "https://www.mbsplugins.eu/IBANExample.md"
+        },
+        {
+          "name": "IBAN.Format",
+          "signature": "MBS( \"IBAN.Format\"; IBAN )",
+          "description": "Formats the IBAN for printing. Will add space after 4 characters. Ignores invalid characters in input, e.g. strip out dots or dashes. You may want to do a trim() on the number yourself.",
+          "parameters": [
+            {
+              "name": "IBAN",
+              "description": "The IBAN to format.",
+              "example": "\"DE29100100100987654321\"",
+              "optional": false
+            }
+          ],
+          "result": "Returns text or error.",
+          "version_introduced": "11.1",
+          "prerelease": false,
+          "deprecated": false,
+          "compatibility": {
+            "macos": true,
+            "windows": true,
+            "linux": true,
+            "server": true,
+            "ios_sdk": true
+          },
+          "examples": [
+            {
+              "label": "Format an IBAN:",
+              "text_code": "MBS\n(\"IBAN.Format\"; \"DE29100100100987654321!\")\nFormat an IBAN:\nExample result:\nDE29 1001 0010 0987 6543 21",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS(\"IBAN.Format\"; \"DE29100100100987654321!\")</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
+            },
+            {
+              "label": "Format IBAN containing other characters:",
+              "text_code": "MBS\n(\"IBAN.Format\"; \" DE29 1001\n-0010.0987\n?654321!\")\nFormat IBAN containing other characters:\nExample result:\nDE29 1001 0010 0987 6543 21",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS(\"IBAN.Format\"; \" DE29 1001-0010.0987?654321!\")</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
+            }
+          ],
+          "see_also": [
+            "JSON.Format"
+          ],
+          "status": "licensed",
+          "url": "https://www.mbsplugins.eu/IBANFormat.md"
+        },
+        {
+          "name": "IBAN.IsValid",
+          "signature": "MBS( \"IBAN.IsValid\"; IBAN )",
+          "description": "Checks whether an IBAN is valid. Ignores invalid characters in input, e.g. strip out dots, spaces or dashes. The IBAN must: have a valid country code. have the minimum length for the country. match the structure of the country's IBAN format (See IBAN.RegEx ) have a valid checksum. Returns 1 if valid or 0 if not. You may want to do a trim() on the number yourself.",
+          "parameters": [
+            {
+              "name": "IBAN",
+              "description": "The IBAN to check.",
+              "example": "\"DE29100100100987654321\"",
+              "optional": false
+            }
+          ],
+          "result": "Returns 1, 0 or error.",
+          "version_introduced": "11.1",
+          "prerelease": false,
+          "deprecated": false,
+          "compatibility": {
+            "macos": true,
+            "windows": true,
+            "linux": true,
+            "server": true,
+            "ios_sdk": true
+          },
+          "examples": [
+            {
+              "label": "Check whether IBAN is valid:",
+              "text_code": "MBS\n(\"IBAN.isValid\"; \"DE29100100100987654321\")\nCheck whether IBAN is valid:",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS(\"IBAN.isValid\"; \"DE29100100100987654321\")</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
+            }
+          ],
+          "see_also": [
+            "IBAN.RegEx",
+            "JSON.IsValid"
+          ],
+          "status": "licensed",
+          "url": "https://www.mbsplugins.eu/IBANIsValid.md"
+        },
+        {
+          "name": "IBAN.RegEx",
+          "signature": "MBS( \"IBAN.RegEx\"; Country )",
+          "description": "Queries regular expression for country. You may use the regular expression to find IBAN within text.",
+          "parameters": [
+            {
+              "name": "Country",
+              "description": "Pass country code.",
+              "example": "\"DE\"",
+              "optional": false
+            }
+          ],
+          "result": "Returns text or error.",
+          "version_introduced": "11.1",
+          "prerelease": false,
+          "deprecated": false,
+          "compatibility": {
+            "macos": true,
+            "windows": true,
+            "linux": true,
+            "server": true,
+            "ios_sdk": true
+          },
+          "examples": [
+            {
+              "label": "Query RegEx for Germany:",
+              "text_code": "MBS\n( \"IBAN.RegEx\"; \"DE\" )\nQuery RegEx for Germany:\nExample result:\n^DE[0-9]{2}([0-9]{08})([0-9]{10})$",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS( \"IBAN.RegEx\"; \"DE\" )</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
+            },
+            {
+              "label": "Find a german IBAN in a text:",
+              "text_code": "Let([\nInput = \"Hello DE29100100100987654321 World!\";\nR =\nMBS\n( \"IBAN.RegEx\"; \"DE\");\nR = substitute(R; \"^\"; \"\");\nR = substitute(R; \"$\"; \"\");\nFound =\nMBS\n(\"\nRegEx.Extract\n\"; input; R; \"\\\\0\"; 0 )\n]; Found)\nFind a german IBAN in a text:",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>Let([\nInput = \"Hello DE29100100100987654321 World!\";\nR = MBS( \"IBAN.RegEx\"; \"DE\");\nR = substitute(R; \"^\"; \"\");\nR = substitute(R; \"$\"; \"\");\n\nFound = MBS(\"RegEx.Extract\"; input; R; \"\\\\0\"; 0 )\n]; Found)</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
+            }
+          ],
+          "see_also": [
+            "IBAN.IsValid",
+            "RegEx.Extract"
+          ],
+          "status": "licensed",
+          "url": "https://www.mbsplugins.eu/IBANRegEx.md"
         }
       ]
     },
@@ -6825,12 +6689,12 @@
         }
       ]
     },
-    "Notification": {
-      "component": "Notification",
-      "function_count": 6,
+    "LCMS": {
+      "component": "LCMS",
+      "function_count": 1,
       "status_counts": {
-        "free": 0,
-        "licensed": 6,
+        "free": 1,
+        "licensed": 0,
         "unknown_license": 0
       },
       "prerelease_count": 0,
@@ -6838,250 +6702,392 @@
       "requires_addon": null,
       "functions": [
         {
-          "name": "Notification.List",
-          "signature": "MBS( \"Notification.List\" )",
-          "description": "Returns list of all notification names registered.",
-          "parameters": [],
-          "result": "Returns list of names.",
-          "version_introduced": "3.3",
+          "name": "LCMS.ProfileInfo",
+          "signature": "MBS( \"LCMS.ProfileInfo\"; ProfileData; Selector )",
+          "description": "Queries profile information for an ICC Profile. The name field is dynamically build from Model, Manufacturer and/or Description.",
+          "parameters": [
+            {
+              "name": "ProfileData",
+              "description": "The container containing the ICC profile as file.",
+              "example": "MyTable::ICCProfile",
+              "optional": false
+            },
+            {
+              "name": "Selector",
+              "description": "Currently can be Name, Description, Copyright, Model, Manufacturer.",
+              "example": "\"Name\"",
+              "optional": false
+            }
+          ],
+          "result": "Returns info or error.",
+          "version_introduced": "4.0",
           "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
             "windows": true,
-            "linux": false,
+            "linux": true,
             "server": true,
-            "ios_sdk": false
+            "ios_sdk": true
           },
           "examples": [
             {
-              "label": "List all object IDs:",
-              "text_code": "Set Variable [\n$list\n; Value:\nMBS\n( \"Notification.List\" ) ]\nList all object IDs:",
-              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS( \"Notification.List\" ) </Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$list</Name>\n  </Step>\n</fmxmlsnippet>"
+              "label": "Shows various informations:",
+              "text_code": "Show Custom Dialog [\"Info\";\n\"Name: \" &\nMBS\n(\"LCMS.PRofileInfo\";\nDrawing::ICCProfile\n; \"Name\") & ¶ &\n\"Model: \" &\nMBS\n(\"LCMS.PRofileInfo\";\nDrawing::ICCProfile\n; \"Model\") & ¶ &\n\"Manufacturer: \" &\nMBS\n(\"LCMS.PRofileInfo\";\nDrawing::ICCProfile\n; \"Manufacturer\") & ¶ &\n\"Description: \" &\nMBS\n(\"LCMS.PRofileInfo\";\nDrawing::ICCProfile\n; \"Description\") & ¶ &\n\"Copyright: \" &\nMBS\n(\"LCMS.PRofileInfo\";\nDrawing::ICCProfile\n; \"Copyright\")]\nShows various informations:",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"87\" name=\"Show Custom Dialog\">\n    <Title>\n      <Calculation>\"Info\";\"Name: \" &amp; MBS(\"LCMS.PRofileInfo\"; Drawing::ICCProfile; \"Name\") &amp; ¶ &amp;\"Model: \" &amp; MBS(\"LCMS.PRofileInfo\"; Drawing::ICCProfile; \"Model\") &amp; ¶ &amp;\"Manufacturer: \" &amp; MBS(\"LCMS.PRofileInfo\"; Drawing::ICCProfile; \"Manufacturer\") &amp; ¶ &amp;\"Description: \" &amp; MBS(\"LCMS.PRofileInfo\"; Drawing::ICCProfile; \"Description\") &amp; ¶ &amp;\"Copyright: \" &amp; MBS(\"LCMS.PRofileInfo\"; Drawing::ICCProfile</Calculation>\n    </Title>\n    <Message>\n      <Calculation>\"Copyright\")</Calculation>\n    </Message>\n    <Buttons>\n      <Button CommitState=\"True\">\n        <Calculation>\"OK\"</Calculation>\n      </Button>\n      <Button CommitState=\"False\">\n        <Calculation>\"Cancel\"</Calculation>\n      </Button>\n      <Button CommitState=\"False\"/>\n    </Buttons>\n  </Step>\n</fmxmlsnippet>"
             }
           ],
-          "see_also": [
-            "Notification.Listen",
-            "Notification.Send",
-            "Notification.Unlisten",
-            "UNNotification.List"
-          ],
-          "status": "licensed",
-          "url": "https://www.mbsplugins.eu/NotificationList.md"
-        },
+          "see_also": [],
+          "status": "free",
+          "url": "https://www.mbsplugins.eu/LCMSProfileInfo.md"
+        }
+      ]
+    },
+    "MarkDown": {
+      "component": "MarkDown",
+      "function_count": 9,
+      "status_counts": {
+        "free": 2,
+        "licensed": 7,
+        "unknown_license": 0
+      },
+      "prerelease_count": 0,
+      "deprecated_count": 0,
+      "requires_addon": null,
+      "functions": [
         {
-          "name": "Notification.Listen",
-          "signature": "MBS( \"Notification.Listen\"; NotificationName; FileName; ScriptName )",
-          "description": "Starts listening for a notification. Specify a filename and script name to have this script being called when a notification is received. The script parameter will be the notification name plus parameters. Although the notification name can be any text, you probably want to use reverse dns notation to avoid conflicts. This is implemented with Distributed Notifications on Mac and named messaged on Windows. You can use our NSDistributedNotificationCenterMBS and WinNotificationMBS classes in the Real Studio plugins to send/receive this notifications. Version 7.2 and newer pass parameters to the script call. On Windows you get both parameters (WParam and LParam). For version 7.3 you can receive a payload in json as script parameter to the script call after the name of notification. If you need to trigger scripts on other computers, please check UDPSocket or ServerSocket functions. With plugin version 6.0 or newer the script name can be a script ID number. In that case the plugin queries the script name for the given script ID. This allows to call scripts by ID and avoid problems if scripts are later renamed. Notice: FileMaker 19.2 adds a fmplugin extended privileges. If you have such an extended privileges to allow the plugin to trigger scripts, you need to grant permissions for it. If such a privilege is not defined, the plugin is allowed to trigger scripts. See FileMaker product documentation for details.",
+          "name": "MarkDown.CSS",
+          "signature": "MBS( \"MarkDown.CSS\"; MarkDownRef )",
+          "description": "Queries CSS for the markdown.",
           "parameters": [
             {
-              "name": "NotificationName",
-              "description": "The name of the notification.",
-              "example": "\"de.mbsplugins.MyTestNotification\"",
-              "optional": false
-            },
-            {
-              "name": "FileName",
-              "description": "The name of the FileMaker File that contains the script",
-              "example": null,
-              "optional": false
-            },
-            {
-              "name": "ScriptName",
-              "description": "The name of the script to run",
-              "example": null,
+              "name": "MarkDownRef",
+              "description": "The reference to the MarkDown object as returned by MarkDown.Create function.",
+              "example": "$ref",
               "optional": false
             }
           ],
-          "result": "Returns \"OK\" or error message.",
-          "version_introduced": "2.6",
+          "result": "Returns text or error.",
+          "version_introduced": "5.1",
           "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
             "windows": true,
-            "linux": false,
-            "server": false,
-            "ios_sdk": false
-          },
-          "examples": [
-            {
-              "label": "Registers script event:",
-              "text_code": "MBS\n( \"Notification.Listen\"; \"de.mbsplugins.MyTestNotification\"; Get ( FileName ); \"GotTestNotification\")\nRegisters script event:",
-              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS( \"Notification.Listen\"; \"de.mbsplugins.MyTestNotification\"; Get ( FileName ); \"GotTestNotification\")</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
-            },
-            {
-              "label": "Listen for device change event on Windows:",
-              "text_code": "MBS\n( \"Notification.Listen\"; 537; Get ( FileName ); \"DeviceChanged\")\n// Notifies an application of a change to the hardware configuration of a device or the computer.\nListen for device change event on Windows:",
-              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS( \"Notification.Listen\"; 537; Get ( FileName ); \"DeviceChanged\")\n\n// Notifies an application of a change to the hardware configuration of a device or the computer.</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
-            },
-            {
-              "label": "Listen for System time change event on Windows:",
-              "text_code": "MBS\n( \"Notification.Listen\"; 31; Get ( FileName ); \"TimeChangedTrigger\")\nListen for System time change event on Windows:",
-              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS( \"Notification.Listen\"; 31; Get ( FileName ); \"TimeChangedTrigger\")</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
-            },
-            {
-              "label": "Listen for display change on Windows:",
-              "text_code": "MBS\n( \"Notification.Listen\"; 126; Get ( FileName ); \"DisplayChangedTrigger\")\n// The WM_DISPLAYCHANGE message is sent to all windows when the display resolution has changed.\nListen for display change on Windows:",
-              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS( \"Notification.Listen\"; 126; Get ( FileName ); \"DisplayChangedTrigger\")\n\n// The WM_DISPLAYCHANGE message is sent to all windows when the display resolution has changed.</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
-            }
-          ],
-          "see_also": [
-            "Notification.List",
-            "Notification.Send",
-            "Notification.Unlisten",
-            "UNNotification.List"
-          ],
-          "status": "licensed",
-          "url": "https://www.mbsplugins.eu/NotificationListen.md"
-        },
-        {
-          "name": "Notification.Send",
-          "signature": "MBS( \"Notification.Send\"; NotificationName { ; Param1; Param2 } )",
-          "description": "Sends a notification. This notification is delivered to all applications on the computer which register for receiving it.",
-          "parameters": [
-            {
-              "name": "NotificationName",
-              "description": "The name of the notification.",
-              "example": "\"de.mbsplugins.MyTestNotification\"",
-              "optional": false
-            },
-            {
-              "name": "Param1",
-              "description": "A number to pass on Windows. For Mac in 7.3 plugins you can pass JSON here.",
-              "example": null,
-              "optional": true
-            },
-            {
-              "name": "Param2",
-              "description": "A number to pass on Windows.",
-              "example": null,
-              "optional": true
-            }
-          ],
-          "result": "Returns \"OK\" or error message.",
-          "version_introduced": "2.6",
-          "prerelease": false,
-          "deprecated": false,
-          "compatibility": {
-            "macos": true,
-            "windows": true,
-            "linux": false,
+            "linux": true,
             "server": true,
-            "ios_sdk": false
+            "ios_sdk": true
           },
-          "examples": [
-            {
-              "label": "Send notification on Mac with JSON payload:",
-              "text_code": "MBS\n(\"Notification.Send\"; \"MyNotification\"; \"{\\\"recordID\\\":5}\")\nSend notification on Mac with JSON payload:",
-              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS(\"Notification.Send\"; \"MyNotification\"; \"{\\\"recordID\\\":5}\")</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
-            }
-          ],
+          "examples": [],
           "see_also": [
-            "Notification.List",
-            "Notification.Listen",
-            "UNNotification.New"
+            "MarkDown.Create",
+            "Text.HTMLtoStyledText"
           ],
           "status": "licensed",
-          "url": "https://www.mbsplugins.eu/NotificationSend.md"
+          "url": "https://www.mbsplugins.eu/MarkDownCSS.md"
         },
         {
-          "name": "Notification.SendDirect",
-          "signature": "MBS( \"Notification.SendDirect\"; NotificationName { ; Parameter } )",
-          "description": "Sends a notification within FileMaker to all listener. This notification is delivered to all listening scripts within the FileMaker instance. For debugging.",
+          "name": "MarkDown.Colorize",
+          "signature": "MBS( \"MarkDown.Colorize\"; MarkDownText )",
+          "description": "Colorizes the Markdown.",
           "parameters": [
             {
-              "name": "NotificationName",
-              "description": "The name of the notification.",
-              "example": "\"de.mbsplugins.MyTestNotification\"",
+              "name": "MarkDownText",
+              "description": "The text in MarkDown format.",
+              "example": "\"Hello **World**\"",
               "optional": false
-            },
-            {
-              "name": "Parameter",
-              "description": "The script parameter. If you don't specify, we pass name of notifcation as usual. By passing your own parameter, you can include several values like a list of values including record IDs or reference numbers.",
-              "example": null,
-              "optional": true
             }
           ],
-          "result": "Returns number or error.",
-          "version_introduced": "5.2",
+          "result": "Returns styled text or error.",
+          "version_introduced": "16.0",
           "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
             "windows": true,
-            "linux": false,
+            "linux": true,
             "server": true,
-            "ios_sdk": false
+            "ios_sdk": true
           },
           "examples": [],
           "see_also": [],
           "status": "licensed",
-          "url": "https://www.mbsplugins.eu/NotificationSendDirect.md"
+          "url": "https://www.mbsplugins.eu/MarkDownColorize.md"
         },
         {
-          "name": "Notification.Unlisten",
-          "signature": "MBS( \"Notification.Unlisten\"; NotificationName )",
-          "description": "Unregisters a notification handler.",
+          "name": "MarkDown.Create",
+          "signature": "MBS( \"MarkDown.Create\"; MarkDownCode )",
+          "description": "Creates a new MarkDown convert object with given markdown code.",
           "parameters": [
             {
-              "name": "NotificationName",
-              "description": "The name of the notification.",
-              "example": "\"de.mbsplugins.MyTestNotification\"",
+              "name": "MarkDownCode",
+              "description": "The mark down code to process.",
+              "example": null,
               "optional": false
             }
           ],
-          "result": "Returns OK or error message.",
-          "version_introduced": "3.3",
+          "result": "Returns reference number or error.",
+          "version_introduced": "5.1",
           "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
             "windows": true,
-            "linux": false,
+            "linux": true,
             "server": true,
-            "ios_sdk": false
+            "ios_sdk": true
           },
-          "examples": [],
+          "examples": [
+            {
+              "label": "Create and query html:",
+              "text_code": "Set Variable [\n$r\n; Value:\nMBS\n(\"MarkDown.Create\"; \"Text attributes *italic*, **bold**, `monospace`, ~~strikethrough~~ .\") ]\nSet Variable [\n$html\n; Value:\nMBS\n(\"\nMarkDown.HTML\n\";\n$r\n) ]\nSet Variable [\n$r\n; Value:\nMBS\n(\"\nMarkDown.Release\n\";\n$r\n) ]\nCreate and query html:",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS(\"MarkDown.Create\"; \"Text attributes *italic*, **bold**, `monospace`, ~~strikethrough~~ .\") </Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS(\"MarkDown.HTML\"; $r) </Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$html</Name>\n  </Step>\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS(\"MarkDown.Release\"; $r) </Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
+            }
+          ],
           "see_also": [
-            "Notification.List",
-            "Notification.Listen",
-            "Notification.UnlistenAll"
+            "MarkDown.CSS",
+            "MarkDown.HTML",
+            "MarkDown.HTMLDocument",
+            "MarkDown.Release",
+            "MarkDown.StyledText",
+            "Text.HTMLtoStyledText"
           ],
           "status": "licensed",
-          "url": "https://www.mbsplugins.eu/NotificationUnlisten.md"
+          "url": "https://www.mbsplugins.eu/MarkDownCreate.md"
         },
         {
-          "name": "Notification.UnlistenAll",
-          "signature": "MBS( \"Notification.UnlistenAll\" )",
-          "description": "Stops listening to all notifications.",
-          "parameters": [],
-          "result": "Returns OK or error.",
-          "version_introduced": "7.2",
+          "name": "MarkDown.HTML",
+          "signature": "MBS( \"MarkDown.HTML\"; MarkDownRef )",
+          "description": "Queries html for the markdown.",
+          "parameters": [
+            {
+              "name": "MarkDownRef",
+              "description": "The reference to the MarkDown object as returned by MarkDown.Create function.",
+              "example": "$ref",
+              "optional": false
+            }
+          ],
+          "result": "Returns text or error.",
+          "version_introduced": "5.1",
           "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
             "windows": true,
-            "linux": false,
+            "linux": true,
             "server": true,
-            "ios_sdk": false
+            "ios_sdk": true
           },
-          "examples": [],
+          "examples": [
+            {
+              "label": "Create and query html:",
+              "text_code": "Set Variable [\n$r\n; Value:\nMBS\n(\"\nMarkDown.Create\n\"; \"Text attributes *italic*, **bold**, `monospace`, ~~strikethrough~~ .\") ]\nSet Variable [\n$html\n; Value:\nMBS\n(\"MarkDown.HTML\";\n$r\n) ]\nSet Variable [\n$r\n; Value:\nMBS\n(\"\nMarkDown.Release\n\";\n$r\n) ]\nCreate and query html:",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS(\"MarkDown.Create\"; \"Text attributes *italic*, **bold**, `monospace`, ~~strikethrough~~ .\") </Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS(\"MarkDown.HTML\"; $r) </Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$html</Name>\n  </Step>\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS(\"MarkDown.Release\"; $r) </Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
+            },
+            {
+              "label": "Convert in Let():",
+              "text_code": "Let (\n[\npTextMitMarkdown = \"This is a multiline ¶**Text**¶¶new paragraph\" ;\nvMarkdown =\nMBS\n(\"\nMarkDown.Create\n\"; pTextMitMarkdown ) ;\nvHTML =\nMBS\n(\"MarkDown.HTML\"; vMarkdown ) ;\nvRelease =\nMBS\n(\"\nMarkDown.Release\n\"; vMarkdown )\n];\nvHTML)\nConvert in Let():\nExample result:\n<p>This is a multiline\n<strong>Text</strong></p>\n<p>new paragraph</p>",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>Let (\n[\n pTextMitMarkdown = \"This is a multiline ¶**Text**¶¶new paragraph\" ;\n vMarkdown =MBS(\"MarkDown.Create\"; pTextMitMarkdown ) ;\n vHTML = MBS(\"MarkDown.HTML\"; vMarkdown ) ;\n vRelease = MBS(\"MarkDown.Release\"; vMarkdown )\n\n];\n\nvHTML)</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
+            }
+          ],
           "see_also": [
-            "Notification.Unlisten"
+            "MarkDown.Create",
+            "MarkDown.HTMLDocument",
+            "MarkDown.Release",
+            "MarkDown.StyledText",
+            "Text.HTMLtoStyledText"
           ],
           "status": "licensed",
-          "url": "https://www.mbsplugins.eu/NotificationUnlistenAll.md"
+          "url": "https://www.mbsplugins.eu/MarkDownHTML.md"
+        },
+        {
+          "name": "MarkDown.HTMLDocument",
+          "signature": "MBS( \"MarkDown.HTMLDocument\"; MarkDownRef )",
+          "description": "Queries html document for the markdown. This will use HTML and CSS and wrap them in <html> tag with header and body to make a full document.",
+          "parameters": [
+            {
+              "name": "MarkDownRef",
+              "description": "The reference to the MarkDown object as returned by MarkDown.Create function.",
+              "example": "$ref",
+              "optional": false
+            }
+          ],
+          "result": "Returns html text or error.",
+          "version_introduced": "15.5",
+          "prerelease": false,
+          "deprecated": false,
+          "compatibility": {
+            "macos": true,
+            "windows": true,
+            "linux": true,
+            "server": true,
+            "ios_sdk": true
+          },
+          "examples": [
+            {
+              "label": "Create and query html:",
+              "text_code": "Set Variable [\n$r\n; Value:\nMBS\n(\"\nMarkDown.Create\n\"; \"Text attributes *italic*, **bold**, `monospace`, ~~strikethrough~~ .\") ]\nSet Variable [\n$html\n; Value:\nMBS\n(\"MarkDown.HTMLDocument\";\n$r\n) ]\nSet Variable [\n$r\n; Value:\nMBS\n(\"\nMarkDown.Release\n\";\n$r\n) ]\nCreate and query html:",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS(\"MarkDown.Create\"; \"Text attributes *italic*, **bold**, `monospace`, ~~strikethrough~~ .\") </Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS(\"MarkDown.HTMLDocument\"; $r) </Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$html</Name>\n  </Step>\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS(\"MarkDown.Release\"; $r) </Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
+            }
+          ],
+          "see_also": [
+            "MarkDown.Create",
+            "MarkDown.HTML",
+            "MarkDown.Release",
+            "MarkDown.StyledText"
+          ],
+          "status": "licensed",
+          "url": "https://www.mbsplugins.eu/MarkDownHTMLDocument.md"
+        },
+        {
+          "name": "MarkDown.List",
+          "signature": "MBS( \"MarkDown.List\" )",
+          "description": "Lists all IDs of markdown objects. Returns IDs for all MarkDown objects in memory. If this list is growing, you may have forgotten to call MarkDown.Release in your scripts.",
+          "parameters": [],
+          "result": "Returns list or error.",
+          "version_introduced": "13.0",
+          "prerelease": false,
+          "deprecated": false,
+          "compatibility": {
+            "macos": true,
+            "windows": true,
+            "linux": true,
+            "server": true,
+            "ios_sdk": true
+          },
+          "examples": [
+            {
+              "label": "List all object IDs:",
+              "text_code": "Set Variable [\n$list\n; Value:\nMBS\n( \"MarkDown.List\" ) ]\nList all object IDs:",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS( \"MarkDown.List\" ) </Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$list</Name>\n  </Step>\n</fmxmlsnippet>"
+            }
+          ],
+          "see_also": [
+            "MarkDown.Release"
+          ],
+          "status": "free",
+          "url": "https://www.mbsplugins.eu/MarkDownList.md"
+        },
+        {
+          "name": "MarkDown.Release",
+          "signature": "MBS( \"MarkDown.Release\"; MarkDownRef )",
+          "description": "Releases the mark down object.",
+          "parameters": [
+            {
+              "name": "MarkDownRef",
+              "description": "The reference to the MarkDown object as returned by MarkDown.Create function.",
+              "example": "$ref",
+              "optional": false
+            }
+          ],
+          "result": "Returns OK or error.",
+          "version_introduced": "5.1",
+          "prerelease": false,
+          "deprecated": false,
+          "compatibility": {
+            "macos": true,
+            "windows": true,
+            "linux": true,
+            "server": true,
+            "ios_sdk": true
+          },
+          "examples": [
+            {
+              "label": "Create and query html:",
+              "text_code": "Set Variable [\n$r\n; Value:\nMBS\n(\"\nMarkDown.Create\n\"; \"Text attributes *italic*, **bold**, `monospace`, ~~strikethrough~~ .\") ]\nSet Variable [\n$html\n; Value:\nMBS\n(\"\nMarkDown.HTML\n\";\n$r\n) ]\nSet Variable [\n$r\n; Value:\nMBS\n(\"MarkDown.Release\";\n$r\n) ]\nCreate and query html:",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS(\"MarkDown.Create\"; \"Text attributes *italic*, **bold**, `monospace`, ~~strikethrough~~ .\") </Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS(\"MarkDown.HTML\"; $r) </Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$html</Name>\n  </Step>\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS(\"MarkDown.Release\"; $r) </Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
+            }
+          ],
+          "see_also": [
+            "MarkDown.Create",
+            "MarkDown.HTML",
+            "MarkDown.HTMLDocument",
+            "MarkDown.List",
+            "MarkDown.ReleaseAll",
+            "MarkDown.StyledText",
+            "Text.HTMLtoStyledText"
+          ],
+          "status": "licensed",
+          "url": "https://www.mbsplugins.eu/MarkDownRelease.md"
+        },
+        {
+          "name": "MarkDown.ReleaseAll",
+          "signature": "MBS( \"MarkDown.ReleaseAll\" )",
+          "description": "Frees all markdown objects. Be aware that on a server this may free objects, which are used by other scripts running in parallel!",
+          "parameters": [],
+          "result": "Returns OK or error.",
+          "version_introduced": "10.5",
+          "prerelease": false,
+          "deprecated": false,
+          "compatibility": {
+            "macos": true,
+            "windows": true,
+            "linux": true,
+            "server": true,
+            "ios_sdk": true
+          },
+          "examples": [
+            {
+              "label": "Cleanup:",
+              "text_code": "Set Variable [\n$r\n; Value:\nMBS\n( \"MarkDown.ReleaseAll\" ) ]\nCleanup:",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS( \"MarkDown.ReleaseAll\" ) </Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
+            }
+          ],
+          "see_also": [
+            "MapView.ReleaseAll",
+            "MarkDown.Release"
+          ],
+          "status": "free",
+          "url": "https://www.mbsplugins.eu/MarkDownReleaseAll.md"
+        },
+        {
+          "name": "MarkDown.StyledText",
+          "signature": "MBS( \"MarkDown.StyledText\"; MarkDownRef )",
+          "description": "Creates styled text for the markdown. Uses MarkDown.HTMLDocument and Text.HTMLtoStyledText internally to convert from markdown to html to styled text.",
+          "parameters": [
+            {
+              "name": "MarkDownRef",
+              "description": "The reference to the MarkDown object as returned by MarkDown.Create function.",
+              "example": "$ref",
+              "optional": false
+            }
+          ],
+          "result": "Returns styled text or error.",
+          "version_introduced": "15.5",
+          "prerelease": false,
+          "deprecated": false,
+          "compatibility": {
+            "macos": true,
+            "windows": true,
+            "linux": true,
+            "server": true,
+            "ios_sdk": true
+          },
+          "examples": [
+            {
+              "label": "Create and query styled text:",
+              "text_code": "Set Variable [\n$r\n; Value:\nMBS\n(\"\nMarkDown.Create\n\"; \"Text attributes *italic*, **bold**, `monospace`, ~~strikethrough~~ .\") ]\nSet Variable [\n$text\n; Value:\nMBS\n(\"MarkDown.StyledText\";\n$r\n) ]\nSet Variable [\n$r\n; Value:\nMBS\n(\"\nMarkDown.Release\n\";\n$r\n) ]\nCreate and query styled text:",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS(\"MarkDown.Create\"; \"Text attributes *italic*, **bold**, `monospace`, ~~strikethrough~~ .\") </Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS(\"MarkDown.StyledText\"; $r) </Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$text</Name>\n  </Step>\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS(\"MarkDown.Release\"; $r) </Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
+            }
+          ],
+          "see_also": [
+            "MarkDown.Create",
+            "MarkDown.HTML",
+            "MarkDown.HTMLDocument",
+            "MarkDown.Release",
+            "Text.HTMLtoStyledText"
+          ],
+          "status": "licensed",
+          "url": "https://www.mbsplugins.eu/MarkDownStyledText.md"
         }
       ]
     },
-    "ScreenshotRect": {
-      "component": "ScreenshotRect",
-      "function_count": 1,
+    "QuartzFilterManager": {
+      "component": "QuartzFilterManager",
+      "function_count": 3,
       "status_counts": {
         "free": 0,
-        "licensed": 1,
+        "licensed": 3,
         "unknown_license": 0
       },
       "prerelease_count": 0,
@@ -7089,81 +7095,103 @@
       "requires_addon": null,
       "functions": [
         {
-          "name": "ScreenshotRect",
-          "signature": "MBS( \"ScreenshotRect\"; Left; Top; Width; Height; Format; Quality; File Name )",
-          "description": "This function will take snapshot of the area of the screen described by the first four Parameters. Updated for macOS 10.7 in plugin version 2.5. Returns the image as container value, so you can assign it to a container field or save to disk with Container.WriteFile function.",
-          "parameters": [
-            {
-              "name": "Left",
-              "description": "Left",
-              "example": "100",
-              "optional": false
-            },
-            {
-              "name": "Top",
-              "description": "Top",
-              "example": "100",
-              "optional": false
-            },
-            {
-              "name": "Width",
-              "description": "Width of the rectangle",
-              "example": "200",
-              "optional": false
-            },
-            {
-              "name": "Height",
-              "description": "Height of Rectangle",
-              "example": "200",
-              "optional": false
-            },
-            {
-              "name": "Format",
-              "description": "File Format. Currently only JPEG supported.",
-              "example": "JPEG",
-              "optional": false
-            },
-            {
-              "name": "Quality",
-              "description": "The quality of the image",
-              "example": "90",
-              "optional": false
-            },
-            {
-              "name": "File Name",
-              "description": "The desired file name. The image is not written to disk. This file name is just added to the container for later export.",
-              "example": "Test File.jpg",
-              "optional": false
-            }
-          ],
-          "result": "Returns the image as a container value so you can assign it to a container.",
-          "version_introduced": "1.0",
+          "name": "QuartzFilterManager.Filters",
+          "signature": "MBS( \"QuartzFilterManager.Filters\" )",
+          "description": "Queries list of all filters. This gives list of filters as localized names. This includes by default: Black & White, Blue Tone, Create Generic PDFX-3 Document, Gray Tone, Lightness Decrease, Lightness Increase, Reduce File Size and Sepia Tone.",
+          "parameters": [],
+          "result": "Returns list or error.",
+          "version_introduced": "4.3",
           "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
-            "windows": true,
+            "windows": false,
             "linux": false,
             "server": false,
             "ios_sdk": false
           },
           "examples": [
             {
-              "label": "Capture a portion of the screen to a JPEG",
-              "text_code": "Let(\n[\n/*-----------------PARAMETERS--------------------*/\nLeft = 100;\nTop = 100;\nWidth = 200;\nHeight = 200;\nFormat = \"JPEG\";\nQuality = 90;\nFile Name = \"Test File.jpg\"\n];\n/*-------------------FUNCTION----------------------*/\nMBS\n(\n\"ScreenshotRect\";\nLeft ;\nTop ;\nWidth ;\nHeight ;\nFormat ;\nQuality ;\nFile Name\n)\n)\nCapture a portion of the screen to a JPEG",
-              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>Let(\n[\n/*-----------------PARAMETERS--------------------*/ \nLeft = 100;\nTop = 100;\nWidth = 200;\nHeight = 200;\nFormat = \"JPEG\";\nQuality = 90;\nFile Name = \"Test File.jpg\"\n];\n/*-------------------FUNCTION----------------------*/ \nMBS( \n\"ScreenshotRect\";\nLeft ;\nTop ;\nWidth ;\nHeight ;\nFormat ;\nQuality ;\nFile Name \n)\n)</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
-            },
-            {
-              "label": "Capture an area of screen as picture:",
-              "text_code": "Set Field [\ntest::test\n;\nMBS\n( \"ScreenshotRect\"; 100; 100; 400; 300; \"JPEG\"; 90; \"screenshot.jpg\" ) ]\nCapture an area of screen as picture:",
-              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"76\" name=\"Set Field\">\n    <Calculation>MBS( \"ScreenshotRect\"; 100; 100; 400; 300; \"JPEG\"; 90; \"screenshot.jpg\" ) </Calculation>\n    <Field table=\"test\" id=\"99999\" name=\"test \"/>\n  </Step>\n</fmxmlsnippet>"
+              "label": "Queries list of filters:",
+              "text_code": "MBS\n( \"QuartzFilterManager.Filters\" )\nQueries list of filters:",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS( \"QuartzFilterManager.Filters\" )</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
             }
           ],
           "see_also": [
-            "Container.WriteFile"
+            "PDFKit.SetCurrentFilter",
+            "QuartzFilterManager.HidePanel"
           ],
           "status": "licensed",
-          "url": "https://www.mbsplugins.eu/ScreenshotRect.md"
+          "url": "https://www.mbsplugins.eu/QuartzFilterManagerFilters.md"
+        },
+        {
+          "name": "QuartzFilterManager.HidePanel",
+          "signature": "MBS( \"QuartzFilterManager.HidePanel\" )",
+          "description": "Hides the panel for the Quartz Filter Manager.",
+          "parameters": [],
+          "result": "Returns OK or error.",
+          "version_introduced": "4.3",
+          "prerelease": false,
+          "deprecated": false,
+          "compatibility": {
+            "macos": true,
+            "windows": false,
+            "linux": false,
+            "server": false,
+            "ios_sdk": false
+          },
+          "examples": [
+            {
+              "label": "Show the panel:",
+              "text_code": "MBS\n( \"\nQuartzFilterManager.ShowPanel\n\" )\nShow the panel:",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS( \"QuartzFilterManager.ShowPanel\" )</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
+            },
+            {
+              "label": "Hide the panel:",
+              "text_code": "MBS\n( \"QuartzFilterManager.HidePanel\" )\nHide the panel:",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS( \"QuartzFilterManager.HidePanel\" )</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
+            }
+          ],
+          "see_also": [
+            "QuartzFilterManager.Filters",
+            "QuartzFilterManager.ShowPanel"
+          ],
+          "status": "licensed",
+          "url": "https://www.mbsplugins.eu/QuartzFilterManagerHidePanel.md"
+        },
+        {
+          "name": "QuartzFilterManager.ShowPanel",
+          "signature": "MBS( \"QuartzFilterManager.ShowPanel\" )",
+          "description": "Shows the panel for the Quartz Filter Manager. This gives your users the possibility to create a filter and later use it with PDFKit functions. e.g. if you create a filter to compress images as JPEG, you can get smaller PDFs.",
+          "parameters": [],
+          "result": "Returns OK or error.",
+          "version_introduced": "4.3",
+          "prerelease": false,
+          "deprecated": false,
+          "compatibility": {
+            "macos": true,
+            "windows": false,
+            "linux": false,
+            "server": false,
+            "ios_sdk": false
+          },
+          "examples": [
+            {
+              "label": "Show the panel:",
+              "text_code": "MBS\n( \"QuartzFilterManager.ShowPanel\" )\nShow the panel:",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS( \"QuartzFilterManager.ShowPanel\" )</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
+            },
+            {
+              "label": "Hide the panel:",
+              "text_code": "MBS\n( \"\nQuartzFilterManager.HidePanel\n\" )\nHide the panel:",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS( \"QuartzFilterManager.HidePanel\" )</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
+            }
+          ],
+          "see_also": [
+            "QuartzFilterManager.HidePanel"
+          ],
+          "status": "licensed",
+          "url": "https://www.mbsplugins.eu/QuartzFilterManagerShowPanel.md"
         }
       ]
     },
@@ -9157,62 +9185,6 @@
           ],
           "status": "licensed",
           "url": "https://www.mbsplugins.eu/SendMailSign.md"
-        }
-      ]
-    },
-    "SetSystemUIMode": {
-      "component": "SetSystemUIMode",
-      "function_count": 1,
-      "status_counts": {
-        "free": 0,
-        "licensed": 1,
-        "unknown_license": 0
-      },
-      "prerelease_count": 0,
-      "deprecated_count": 0,
-      "requires_addon": null,
-      "functions": [
-        {
-          "name": "SetSystemUIMode",
-          "signature": "MBS( \"SetSystemUIMode\"; Mode; Options )",
-          "description": "Sets the system UI mode. The System UI Mode controls the presentation of system-provided user interface elements. Note that the system UI mode is a per-process state. Switching from a process that is suppressing system UI to another process that is not will cause system UI elements to become visible automatically. Switching back to the first process will suppress system UI elements again. In this mode, all standard system UI elements are visible. kUIModeNormal = 0 In this mode, system UI elements which cover the \"content area\" of the screen (the area other than the menubar) are hidden. However, these elements may automatically show themselves in response to mouse movements or other user activity; specifically, the Dock will still show itself automatically when the mouse moves into the Dock's auto-show region. kUIModeContentSuppressed = 1 In this mode, system UI elements which cover the \"content area\" of the screen (the area other than the menubar) are hidden. Unlike kUIModeContentSuppressed, most UI elements will not automatically show themselves in this mode. kUIModeContentHidden = 2, In this mode, all system UI elements, including the menubar, are hidden. However, these elements may automatically show themselves in response to mouse movements or other user activity; specifically, the Dock and menubar will still show themselves automatically when the mouse moves into the Dock's auto-show region. Available in macOS 10.3 and later. kUIModeAllSuppressed = 4, In this mode, all system UI elements, including the menubar, are hidden. Most system UI elements will not automatically show themselves in this mode. The application may request that the menubar automatically show itself while in this mode by passing the kUIOptionAutoShowMenuBar flag to SetSystemUIMode. kUIModeAllHidden = 3 Options which you can combine by adding them together: Requests that the menubar automatically show itself when the user moves the mouse into the screen area that would ordinarily be occupied by the menubar. Only valid with kUIModeAllHidden. kUIOptionAutoShowMenuBar = 1 Disables all items in the Apple menu. Valid for all modes. kUIOptionAnimateMenuBar = 2 Requests that the menubar animate on or offscreen, if the UIMode is also being changed such that the menubar will change visibility. Unlike other UI options, this option is not stored and only affects the behavior of this call to SetSystemUIMode. Valid for all modes. Available in Mac OS X 10.7 and later. kUIOptionDisableAppleMenu = 4 The active application may not be changed while this process is active. Currently disables the Command-Tab and Command-Shift-Tab key sequences to switch the active process, and the global window rotation key sequence selected by the user in the Keyboard preference pane. SetFrontProcess may still be used to explicitly switch the active process. Only valid with modes other than kUIModeNormal. kUIOptionDisableProcessSwitch = 8 The Force Quit window may not be displayed while this process is active. Currently disables the Command-Option-Escape key sequence to open the Force Quit window and the Force Quit menu item in the Apple menu. Only valid with modes other than kUIModeNormal. kUIOptionDisableForceQuit = 16 The current login session may not be terminated while this process is active. Currently disables the Power key and the Restart, Shut Down, and Log Out menu items in the Apple menu. Only valid with modes other than kUIModeNormal. kUIOptionDisableSessionTerminate = 32 The Hide menu item in the Application menu is disabled. Note that this option does not prevent this application from being hidden if Hide Others is selected in some other application. Available in Mac OS X 10.3 and later. kUIOptionDisableHide = 64 Provides the ability to specify whether the menu bar will disable its adaptive transparency. Note this should be used in conjunction with a full-screen window using kUIModeContentSuppressed or kUIModeContentHidden. Available in macOS 10.6 and later. This constant was published in the Mac OS X 10.5 version of MacApplication.h, but had the wrong value (7) and should not be used in Mac OS X 10.5. kUIOptionDisableMenuBarTransparency = 512",
-          "parameters": [
-            {
-              "name": "Mode",
-              "description": "The mode you want.",
-              "example": "1",
-              "optional": false
-            },
-            {
-              "name": "Options",
-              "description": "The options you want.",
-              "example": "0",
-              "optional": false
-            }
-          ],
-          "result": null,
-          "version_introduced": "2.1",
-          "prerelease": false,
-          "deprecated": false,
-          "compatibility": {
-            "macos": true,
-            "windows": false,
-            "linux": false,
-            "server": false,
-            "ios_sdk": false
-          },
-          "examples": [
-            {
-              "label": "Sets mode with hidden content:",
-              "text_code": "MBS\n(\"SetSystemUIMode\"; 1; 0)\nSets mode with hidden content:",
-              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS(\"SetSystemUIMode\"; 1; 0)</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
-            }
-          ],
-          "see_also": [
-            "GetSystemUIMode"
-          ],
-          "status": "licensed",
-          "url": "https://www.mbsplugins.eu/SetSystemUIMode.md"
         }
       ]
     },

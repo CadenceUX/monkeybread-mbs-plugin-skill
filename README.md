@@ -10,7 +10,7 @@ Built and maintained by [Darrin Southern](https://www.linkedin.com/in/darrin-sou
 ## Scope
 
 Built 2026-07-05 from a live crawl of the vendor's documentation site
-(`mbsplugins.eu`), when **16.2** was the latest released plugin version. Covers
+(`mbsplugins.eu`), when **16.3** was the latest released plugin version. Covers
 **all 7,807 functions** across 245 components (SQL, JSON, Dialog, FM, CURL,
 DynaPDF, XL, GMImage, Events, WebView, Math, Text, SystemInfo, and many more —
 see `SKILL.md` for the top-20 table and `references/index.json` for the full
@@ -26,7 +26,7 @@ Two boolean flags sit alongside `status`:
 
 | Flag | Count | Meaning |
 |---|---|---|
-| `prerelease` | 39 | Documented by the vendor for in-development plugin version 16.3, which wasn't released at build time — may not be in your installed plugin yet |
+| `prerelease` | 0 (currently) | Documented by the vendor for a plugin version newer than the latest shipped release. None right now — this build is current with 16.3, the latest release; a future rebuild may find new pre-release functions |
 | `deprecated` | 396 | On the vendor's deprecated-functions list — still works, but a replacement is recommended |
 
 Three components additionally need a separate paid add-on beyond the base plugin
@@ -35,7 +35,7 @@ component's entry.
 
 ## Installing
 
-**macOS (Claude desktop app):** double-click the `monkeybread-mbs-plugin-v1.3.skill`
+**macOS (Claude desktop app):** double-click the `monkeybread-mbs-plugin-v1.4.skill`
 file — it opens Claude's skill-install flow directly. (The `.skill` file is just the
 release zip renamed.)
 
@@ -66,7 +66,7 @@ group-file numbers are reassigned on every rebuild.
 
 This skill checks the vendor's live release notes page once per session
 (`https://www.monkeybreadsoftware.com/filemaker/releasenotes.shtml`) and flags
-if a newer MBS plugin version than 16.2 has been released — see "MBS Plugin
+if a newer MBS plugin version than 16.3 has been released — see "MBS Plugin
 version self-check" in `SKILL.md`, which also documents a one-fetch drift signal
 (the "Currently N functions" counter on `mbsplugins.eu/index.md`). Separately, a
 "Skill update self-check" compares this skill's own `VERSION` against its GitHub

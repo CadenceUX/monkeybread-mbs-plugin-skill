@@ -8,7 +8,7 @@
         "licensed": 364,
         "unknown_license": 103
       },
-      "prerelease_count": 7,
+      "prerelease_count": 0,
       "deprecated_count": 0,
       "requires_addon": "Requires a separate LibXL license ($219 per platform, or $1,199 Enterprise) on top of the base MBS plugin.",
       "functions": [
@@ -12381,7 +12381,7 @@
           ],
           "result": "Returns number or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
@@ -12821,7 +12821,7 @@
           ],
           "result": "Returns OK or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
@@ -16240,7 +16240,7 @@
           ],
           "result": "Returns JSON or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
@@ -16279,7 +16279,7 @@
           ],
           "result": "Returns number or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
@@ -16318,7 +16318,7 @@
           ],
           "result": "Returns JSON or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
@@ -24203,7 +24203,7 @@
           ],
           "result": "Returns 1, 0 or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
@@ -24247,7 +24247,7 @@
           ],
           "result": "Returns OK or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,

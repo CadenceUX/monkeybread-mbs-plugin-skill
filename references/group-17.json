@@ -3659,12 +3659,12 @@
         }
       ]
     },
-    "IsLinux": {
-      "component": "IsLinux",
+    "GetSystemUIMode": {
+      "component": "GetSystemUIMode",
       "function_count": 1,
       "status_counts": {
-        "free": 1,
-        "licensed": 0,
+        "free": 0,
+        "licensed": 1,
         "unknown_license": 0
       },
       "prerelease_count": 0,
@@ -3672,42 +3672,36 @@
       "requires_addon": null,
       "functions": [
         {
-          "name": "IsLinux",
-          "signature": "MBS( \"IsLinux\" )",
-          "description": "Whether we run on Linux. Returns 1 if running on Linux and 0 if not. For FileMaker 14 and older this is definitive always 0. Returns 1 on FileMaker Cloud as this uses a 64-bit Linux.",
+          "name": "GetSystemUIMode",
+          "signature": "MBS( \"GetSystemUIMode\" )",
+          "description": "Queries the current system UI mode. See the SetSystemUIMode function for details on the possible values.",
           "parameters": [],
-          "result": "Returns 1, 0 or error.",
-          "version_introduced": "6.1",
+          "result": "The current mode value.",
+          "version_introduced": "2.1",
           "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
-            "windows": true,
-            "linux": true,
-            "server": true,
-            "ios_sdk": true
+            "windows": false,
+            "linux": false,
+            "server": false,
+            "ios_sdk": false
           },
           "examples": [],
           "see_also": [
-            "Barcode.LoadLibrary",
-            "CURL.SetOptionCAInfo",
-            "IsMacOS",
-            "IsWindows",
-            "Saxon.Load",
-            "XL.Initialize",
-            "XL.IsInitialized"
+            "SetSystemUIMode"
           ],
-          "status": "free",
-          "url": "https://www.mbsplugins.eu/IsLinux.md"
+          "status": "licensed",
+          "url": "https://www.mbsplugins.eu/GetSystemUIMode.md"
         }
       ]
     },
-    "IsRuntime": {
-      "component": "IsRuntime",
-      "function_count": 1,
+    "GZipFile": {
+      "component": "GZipFile",
+      "function_count": 2,
       "status_counts": {
-        "free": 1,
-        "licensed": 0,
+        "free": 0,
+        "licensed": 2,
         "unknown_license": 0
       },
       "prerelease_count": 0,
@@ -3715,12 +3709,25 @@
       "requires_addon": null,
       "functions": [
         {
-          "name": "IsRuntime",
-          "signature": "MBS( \"IsRuntime\" )",
-          "description": "Checks if plugin is running on a runtime. Returns 0 if running on FileMaker Pro or Server. See also IsRegistered , IsServer and IsClient functions.",
-          "parameters": [],
-          "result": "Returns 1 on runtime or 0 elsewhere.",
-          "version_introduced": "4.3",
+          "name": "GZipFile.Compress",
+          "signature": "MBS( \"GZipFile.Compress\"; InputPath; OutputPath )",
+          "description": "Compresses a file. This function uses gzip file format, so please use file extension .gz. Maximum compression is used. As this function processes file in chunks it should work fine with huge files. In case of an error like a full hard disk, you need to manually delete the half written output file. This function requires a native path. Use Path.FileMakerPathToNativePath to convert a FileMaker path to a native path if required. If you like to have the user choose the path, you can use FileDialog functions. For Server be aware that server has limited permissions and may not be able to access all files on a computer.",
+          "parameters": [
+            {
+              "name": "InputPath",
+              "description": "The native path to the input file.",
+              "example": "\"C:\\test.txt\"",
+              "optional": false
+            },
+            {
+              "name": "OutputPath",
+              "description": "The native path to the input file.",
+              "example": "\"C:\\test.gz\"",
+              "optional": false
+            }
+          ],
+          "result": "Returns OK or error.",
+          "version_introduced": "4.2",
           "prerelease": false,
           "deprecated": false,
           "compatibility": {
@@ -3732,19 +3739,108 @@
           },
           "examples": [
             {
-              "label": "Run something only in runtime:",
-              "text_code": "If [\nMBS\n( \"IsRuntime\" )]\n# runs on runtime\nElse\n# runs on non runtime or where no plugin is installed\nEnd If\nRun something only in runtime:",
-              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>If [MBS( \"IsRuntime\" )]\n\t# runs on runtime\nElse\n\t# runs on non runtime or where no plugin is installed\nEnd If</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
+              "label": "Compress a file:",
+              "text_code": "MBS\n( \"GZipFile.Compress\"; \"C:\\test.txt\"; \"C:\\test.gz\" )\nCompress a file:",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS( \"GZipFile.Compress\"; \"C:\\test.txt\"; \"C:\\test.gz\" )</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
+            },
+            {
+              "label": "Compress a picture:",
+              "text_code": "MBS\n( \"GZipFile.Compress\"; \"/Users/cs/Desktop/test.jpg\"; \"/Users/cs/Desktop/test.jpg.gz\" )\nCompress a picture:",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS( \"GZipFile.Compress\"; \"/Users/cs/Desktop/test.jpg\"; \"/Users/cs/Desktop/test.jpg.gz\" )</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
             }
           ],
           "see_also": [
-            "DynaPDF.Initialize",
-            "IsRegistered",
-            "Register",
-            "URLScheme.SetDefaultHandler"
+            "GZipFile.Decompress",
+            "Path.FileMakerPathToNativePath"
+          ],
+          "status": "licensed",
+          "url": "https://www.mbsplugins.eu/GZipFileCompress.md"
+        },
+        {
+          "name": "GZipFile.Decompress",
+          "signature": "MBS( \"GZipFile.Decompress\"; InputPath; OutputPath )",
+          "description": "Decompresses a file. This function uses gzip file format, so please use file extension .gz. As this function processes file in chunks it should work fine with huge files. In case of an error like a full hard disk, you need to manually delete the half written output file. This function requires a native path. Use Path.FileMakerPathToNativePath to convert a FileMaker path to a native path if required. If you like to have the user choose the path, you can use FileDialog functions. For Server be aware that server has limited permissions and may not be able to access all files on a computer.",
+          "parameters": [
+            {
+              "name": "InputPath",
+              "description": "The native path to the input file.",
+              "example": "\"C:\\test.gz\"",
+              "optional": false
+            },
+            {
+              "name": "OutputPath",
+              "description": "The native path to the input file.",
+              "example": "\"C:\\test.txt\"",
+              "optional": false
+            }
+          ],
+          "result": "Returns OK or error.",
+          "version_introduced": "4.2",
+          "prerelease": false,
+          "deprecated": false,
+          "compatibility": {
+            "macos": true,
+            "windows": true,
+            "linux": true,
+            "server": true,
+            "ios_sdk": true
+          },
+          "examples": [
+            {
+              "label": "Uncompress a file:",
+              "text_code": "MBS\n( \"GZipFile.Decompress\"; \"C:\\test.gz\"; \"C:\\test.txt\" )\nUncompress a file:",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS( \"GZipFile.Decompress\"; \"C:\\test.gz\"; \"C:\\test.txt\" )</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
+            }
+          ],
+          "see_also": [
+            "GZipFile.Compress",
+            "Path.FileMakerPathToNativePath"
+          ],
+          "status": "licensed",
+          "url": "https://www.mbsplugins.eu/GZipFileDecompress.md"
+        }
+      ]
+    },
+    "IsIOSDevice": {
+      "component": "IsIOSDevice",
+      "function_count": 1,
+      "status_counts": {
+        "free": 1,
+        "licensed": 0,
+        "unknown_license": 0
+      },
+      "prerelease_count": 0,
+      "deprecated_count": 0,
+      "requires_addon": null,
+      "functions": [
+        {
+          "name": "IsIOSDevice",
+          "signature": "MBS( \"IsIOSDevice\" )",
+          "description": "Queries whether run on iOS device. Returns 0 in simulator or on macOS, Windows and Linux.",
+          "parameters": [],
+          "result": "Returns 1 or 0.",
+          "version_introduced": "8.0",
+          "prerelease": false,
+          "deprecated": false,
+          "compatibility": {
+            "macos": true,
+            "windows": true,
+            "linux": true,
+            "server": true,
+            "ios_sdk": true
+          },
+          "examples": [
+            {
+              "label": "Distinguish between device and simulator:",
+              "text_code": "If [\nMBS\n( \"IsIOSDevice\" ) = 1 ]\n# iOS specific things for device\nElse If [\nMBS\n(\"IsiOSSimulator\") = 1 ]\n# iOS specific things for simulator\nElse\n# other cases\nEnd If\nDistinguish between device and simulator:",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>If [ MBS( \"IsIOSDevice\" ) = 1 ] \n\t# iOS specific things for device\nElse If [ MBS(\"IsiOSSimulator\") = 1 ] \n\t# iOS specific things for simulator\nElse\n\t# other cases\nEnd If</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
+            }
+          ],
+          "see_also": [
+            "IsIOSSimulator"
           ],
           "status": "free",
-          "url": "https://www.mbsplugins.eu/IsRuntime.md"
+          "url": "https://www.mbsplugins.eu/IsIOSDevice.md"
         }
       ]
     },
@@ -3756,7 +3852,7 @@
         "licensed": 10,
         "unknown_license": 0
       },
-      "prerelease_count": 5,
+      "prerelease_count": 0,
       "deprecated_count": 0,
       "requires_addon": null,
       "functions": [
@@ -3792,7 +3888,7 @@
           ],
           "result": "Returns OK or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
@@ -3891,7 +3987,7 @@
           ],
           "result": "Returns OK or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
@@ -3984,7 +4080,7 @@
           ],
           "result": "Returns text or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
@@ -4084,7 +4180,7 @@
           ],
           "result": "Returns JSON or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
@@ -4135,7 +4231,7 @@
           ],
           "result": "Returns OK or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
@@ -10282,85 +10378,6 @@
         }
       ]
     },
-    "StoreRegistration": {
-      "component": "StoreRegistration",
-      "function_count": 1,
-      "status_counts": {
-        "free": 1,
-        "licensed": 0,
-        "unknown_license": 0
-      },
-      "prerelease_count": 0,
-      "deprecated_count": 0,
-      "requires_addon": null,
-      "functions": [
-        {
-          "name": "StoreRegistration",
-          "signature": "MBS( \"StoreRegistration\"; Licensee Name; Component; License Type; Expire Month; Serial number )",
-          "description": "Stores registration on Mac in preferences file of FileMaker so the plugin can auto register itself on startup of FileMaker. This is very useful for trainings where you want to preinstall license on FileMaker installations. Added Windows support in plugin version 4.4. You can clear the license with ClearRegistration function. Added Linux support for 7.5. Saves in preferences file on Mac and Linux, saves to registry on Windows. To store the registration on a FileMaker Server permanently, it is sufficient to call the StoreRegistration function only once by opening a file (e.g. the Registration.fmp12 file) with a OnFirstWindowOpen-Script and a single line of code like this: Set Variable [ $r; Value: MBS( \"StoreRegistration\"; $name; \"Complete\"; \"5 seat\"; $date; $code) ]. After opening it once and thus writing the registration file to the preference file, it can be closed and removed from the server. Currently on Windows the key is written encrypted to the registry into the HKEY_CURRENT_USER\\Software\\FileMaker\\RegistrationMBS entry. On macOS and iOS, we write a RegistrationMBS entry into the com.filemaker.client.pro12.plist file or for Claris Pro into the com.claris.pro.plist file. For Linux the license is saved to /opt/FileMaker/FileMaker Server/MBS.license file. If you use this in a vertical solution, please make sure you update the license key before updating the plugin to avoid the user seeing an error dialog about an old license. Also make sure that every major update you make calls StoreRegistration with a new key to replace the old key stored in preferences. And consider getting a multi year update from us, so you only change license key every few years.",
-          "parameters": [
-            {
-              "name": "Licensee Name",
-              "description": "This is the name of the person or organization that holds the license for the plug-in",
-              "example": "Your Name",
-              "optional": false
-            },
-            {
-              "name": "Component",
-              "description": "The component that was licensed. For example \"Complete\"",
-              "example": null,
-              "optional": false
-            },
-            {
-              "name": "License Type",
-              "description": "Seats purchased. For example, \"1 seat\", \"10 seats\", \"Developer\"",
-              "example": "1 Seat",
-              "optional": false
-            },
-            {
-              "name": "Expire Month",
-              "description": "This is the month in which the serial will expire for new versions of the plug-in in YYYYMM format. Plug-in released before the end of that month will continue to work forever. New Releases after that date will require a renewal",
-              "example": "200708",
-              "optional": false
-            },
-            {
-              "name": "Serial number",
-              "description": "The license number",
-              "example": "your serial number",
-              "optional": false
-            }
-          ],
-          "result": "Returns OK on success.",
-          "version_introduced": "3.0",
-          "prerelease": false,
-          "deprecated": false,
-          "compatibility": {
-            "macos": true,
-            "windows": true,
-            "linux": true,
-            "server": true,
-            "ios_sdk": true
-          },
-          "examples": [
-            {
-              "label": "Stores registration:",
-              "text_code": "$r\n=\nMBS\n( \"StoreRegistration\";\n$name\n; \"Complete\"; \"5 seat\";\n$date\n;\n$code\n)\nStores registration:",
-              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS( \"StoreRegistration\"; $name; \"Complete\"; \"5 seat\"; $date; $code)</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
-            },
-            {
-              "label": "Register with license values in a text field:",
-              "text_code": "Set Variable [\n$result\n; Value: Evaluate(\"\nMBS\n(\\\"StoreRegistration\\\"; \" &\nRegister::License\n& \")\") ]\nRegister with license values in a text field:",
-              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>Evaluate(\"MBS(\\\"StoreRegistration\\\"; \" &amp; Register::License &amp; \")\") </Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$result</Name>\n  </Step>\n</fmxmlsnippet>"
-            }
-          ],
-          "see_also": [
-            "ClearRegistration"
-          ],
-          "status": "free",
-          "url": "https://www.mbsplugins.eu/StoreRegistration.md"
-        }
-      ]
-    },
     "SystemInfo": {
       "component": "SystemInfo",
       "function_count": 87,
@@ -10369,7 +10386,7 @@
         "licensed": 1,
         "unknown_license": 0
       },
-      "prerelease_count": 1,
+      "prerelease_count": 0,
       "deprecated_count": 18,
       "requires_addon": null,
       "functions": [
@@ -12730,7 +12747,7 @@
           "parameters": [],
           "result": "Returns 1, 0 or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,

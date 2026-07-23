@@ -8,7 +8,7 @@
         "licensed": 141,
         "unknown_license": 256
       },
-      "prerelease_count": 1,
+      "prerelease_count": 0,
       "deprecated_count": 17,
       "requires_addon": null,
       "functions": [
@@ -6026,7 +6026,7 @@
           ],
           "result": "Returns number or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,

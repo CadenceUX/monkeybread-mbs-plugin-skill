@@ -83,7 +83,7 @@
         },
         {
           "name": "AVRecorder.AddPreviewWithControl",
-          "signature": "MBS( \"AVRecorder.AddPreviewWithControl\"; AVSession; WindowRef; ControlName )",
+          "signature": "MBS( \"AVRecorder.AddPreviewWithControl\"; AVSession; WindowRef; ControlName { ; DX; DY } )",
           "description": "Adds a preview area to the window using placeholder control.",
           "parameters": [
             {
@@ -103,6 +103,18 @@
               "description": "The name of the control on your FileMaker form. e.g. you can place a rectangle there to define the position.",
               "example": "\"mymedia\"",
               "optional": false
+            },
+            {
+              "name": "DX",
+              "description": "A delta to move drop area more to left or right.",
+              "example": "0",
+              "optional": true
+            },
+            {
+              "name": "DY",
+              "description": "A delta to move drop area more to top or bottom.",
+              "example": "0",
+              "optional": true
             }
           ],
           "result": "Returns OK or error.",
@@ -3639,146 +3651,6 @@
         }
       ]
     },
-    "GetSystemUIModeOptions": {
-      "component": "GetSystemUIModeOptions",
-      "function_count": 1,
-      "status_counts": {
-        "free": 0,
-        "licensed": 1,
-        "unknown_license": 0
-      },
-      "prerelease_count": 0,
-      "deprecated_count": 0,
-      "requires_addon": null,
-      "functions": [
-        {
-          "name": "GetSystemUIModeOptions",
-          "signature": "MBS( \"GetSystemUIModeOptions\" )",
-          "description": "Queries the current system UI mode options. See the SetSystemUIMode function for details on the possible values. This function checks for a license. Created 18th August 2014 , last changed 18th August 2014 GetSystemUIMode - HadErrors 💬 Ask a question or report a problem",
-          "parameters": [],
-          "result": "The current options value.",
-          "version_introduced": "2.1",
-          "prerelease": false,
-          "deprecated": false,
-          "compatibility": {
-            "macos": true,
-            "windows": false,
-            "linux": false,
-            "server": false,
-            "ios_sdk": false
-          },
-          "examples": [],
-          "see_also": [],
-          "status": "licensed",
-          "url": "https://www.mbsplugins.eu/GetSystemUIModeOptions.md"
-        }
-      ]
-    },
-    "GZipFile": {
-      "component": "GZipFile",
-      "function_count": 2,
-      "status_counts": {
-        "free": 0,
-        "licensed": 2,
-        "unknown_license": 0
-      },
-      "prerelease_count": 0,
-      "deprecated_count": 0,
-      "requires_addon": null,
-      "functions": [
-        {
-          "name": "GZipFile.Compress",
-          "signature": "MBS( \"GZipFile.Compress\"; InputPath; OutputPath )",
-          "description": "Compresses a file. This function uses gzip file format, so please use file extension .gz. Maximum compression is used. As this function processes file in chunks it should work fine with huge files. In case of an error like a full hard disk, you need to manually delete the half written output file. This function requires a native path. Use Path.FileMakerPathToNativePath to convert a FileMaker path to a native path if required. If you like to have the user choose the path, you can use FileDialog functions. For Server be aware that server has limited permissions and may not be able to access all files on a computer.",
-          "parameters": [
-            {
-              "name": "InputPath",
-              "description": "The native path to the input file.",
-              "example": "\"C:\\test.txt\"",
-              "optional": false
-            },
-            {
-              "name": "OutputPath",
-              "description": "The native path to the input file.",
-              "example": "\"C:\\test.gz\"",
-              "optional": false
-            }
-          ],
-          "result": "Returns OK or error.",
-          "version_introduced": "4.2",
-          "prerelease": false,
-          "deprecated": false,
-          "compatibility": {
-            "macos": true,
-            "windows": true,
-            "linux": true,
-            "server": true,
-            "ios_sdk": true
-          },
-          "examples": [
-            {
-              "label": "Compress a file:",
-              "text_code": "MBS\n( \"GZipFile.Compress\"; \"C:\\test.txt\"; \"C:\\test.gz\" )\nCompress a file:",
-              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS( \"GZipFile.Compress\"; \"C:\\test.txt\"; \"C:\\test.gz\" )</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
-            },
-            {
-              "label": "Compress a picture:",
-              "text_code": "MBS\n( \"GZipFile.Compress\"; \"/Users/cs/Desktop/test.jpg\"; \"/Users/cs/Desktop/test.jpg.gz\" )\nCompress a picture:",
-              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS( \"GZipFile.Compress\"; \"/Users/cs/Desktop/test.jpg\"; \"/Users/cs/Desktop/test.jpg.gz\" )</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
-            }
-          ],
-          "see_also": [
-            "GZipFile.Decompress",
-            "Path.FileMakerPathToNativePath"
-          ],
-          "status": "licensed",
-          "url": "https://www.mbsplugins.eu/GZipFileCompress.md"
-        },
-        {
-          "name": "GZipFile.Decompress",
-          "signature": "MBS( \"GZipFile.Decompress\"; InputPath; OutputPath )",
-          "description": "Decompresses a file. This function uses gzip file format, so please use file extension .gz. As this function processes file in chunks it should work fine with huge files. In case of an error like a full hard disk, you need to manually delete the half written output file. This function requires a native path. Use Path.FileMakerPathToNativePath to convert a FileMaker path to a native path if required. If you like to have the user choose the path, you can use FileDialog functions. For Server be aware that server has limited permissions and may not be able to access all files on a computer.",
-          "parameters": [
-            {
-              "name": "InputPath",
-              "description": "The native path to the input file.",
-              "example": "\"C:\\test.gz\"",
-              "optional": false
-            },
-            {
-              "name": "OutputPath",
-              "description": "The native path to the input file.",
-              "example": "\"C:\\test.txt\"",
-              "optional": false
-            }
-          ],
-          "result": "Returns OK or error.",
-          "version_introduced": "4.2",
-          "prerelease": false,
-          "deprecated": false,
-          "compatibility": {
-            "macos": true,
-            "windows": true,
-            "linux": true,
-            "server": true,
-            "ios_sdk": true
-          },
-          "examples": [
-            {
-              "label": "Uncompress a file:",
-              "text_code": "MBS\n( \"GZipFile.Decompress\"; \"C:\\test.gz\"; \"C:\\test.txt\" )\nUncompress a file:",
-              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS( \"GZipFile.Decompress\"; \"C:\\test.gz\"; \"C:\\test.txt\" )</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
-            }
-          ],
-          "see_also": [
-            "GZipFile.Compress",
-            "Path.FileMakerPathToNativePath"
-          ],
-          "status": "licensed",
-          "url": "https://www.mbsplugins.eu/GZipFileDecompress.md"
-        }
-      ]
-    },
     "HotKey": {
       "component": "HotKey",
       "function_count": 29,
@@ -5775,6 +5647,90 @@
         }
       ]
     },
+    "IsMobile": {
+      "component": "IsMobile",
+      "function_count": 1,
+      "status_counts": {
+        "free": 1,
+        "licensed": 0,
+        "unknown_license": 0
+      },
+      "prerelease_count": 0,
+      "deprecated_count": 0,
+      "requires_addon": null,
+      "functions": [
+        {
+          "name": "IsMobile",
+          "signature": "MBS( \"IsMobile\" )",
+          "description": "Whether plugin runs on a mobile target. Value is 1 if running in iOS SDK app.",
+          "parameters": [],
+          "result": "Returns 0 or 1.",
+          "version_introduced": "7.2",
+          "prerelease": false,
+          "deprecated": false,
+          "compatibility": {
+            "macos": true,
+            "windows": true,
+            "linux": true,
+            "server": true,
+            "ios_sdk": true
+          },
+          "examples": [],
+          "see_also": [
+            "IsRegistered",
+            "Register"
+          ],
+          "status": "free",
+          "url": "https://www.mbsplugins.eu/IsMobile.md"
+        }
+      ]
+    },
+    "IsRuntime": {
+      "component": "IsRuntime",
+      "function_count": 1,
+      "status_counts": {
+        "free": 1,
+        "licensed": 0,
+        "unknown_license": 0
+      },
+      "prerelease_count": 0,
+      "deprecated_count": 0,
+      "requires_addon": null,
+      "functions": [
+        {
+          "name": "IsRuntime",
+          "signature": "MBS( \"IsRuntime\" )",
+          "description": "Checks if plugin is running on a runtime. Returns 0 if running on FileMaker Pro or Server. See also IsRegistered , IsServer and IsClient functions.",
+          "parameters": [],
+          "result": "Returns 1 on runtime or 0 elsewhere.",
+          "version_introduced": "4.3",
+          "prerelease": false,
+          "deprecated": false,
+          "compatibility": {
+            "macos": true,
+            "windows": true,
+            "linux": true,
+            "server": true,
+            "ios_sdk": true
+          },
+          "examples": [
+            {
+              "label": "Run something only in runtime:",
+              "text_code": "If [\nMBS\n( \"IsRuntime\" )]\n# runs on runtime\nElse\n# runs on non runtime or where no plugin is installed\nEnd If\nRun something only in runtime:",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>If [MBS( \"IsRuntime\" )]\n\t# runs on runtime\nElse\n\t# runs on non runtime or where no plugin is installed\nEnd If</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
+            }
+          ],
+          "see_also": [
+            "DynaPDF.Initialize",
+            "IsRegistered",
+            "Register",
+            "URLScheme.SetDefaultHandler"
+          ],
+          "status": "free",
+          "url": "https://www.mbsplugins.eu/IsRuntime.md"
+        }
+      ]
+    },
     "Java": {
       "component": "Java",
       "function_count": 22,
@@ -6786,7 +6742,7 @@
         "licensed": 93,
         "unknown_license": 3
       },
-      "prerelease_count": 12,
+      "prerelease_count": 0,
       "deprecated_count": 3,
       "requires_addon": null,
       "functions": [
@@ -8904,7 +8860,7 @@
           ],
           "result": "Returns OK or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
@@ -8940,7 +8896,7 @@
           ],
           "result": "Returns OK or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
@@ -8995,7 +8951,7 @@
           ],
           "result": "Returns JSON array, empty or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
@@ -9051,7 +9007,7 @@
           ],
           "result": "Returns JSON object, empty or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
@@ -9100,7 +9056,7 @@
           ],
           "result": "Returns JSON object, empty or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
@@ -9141,7 +9097,7 @@
           ],
           "result": "Returns OK or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
@@ -9182,7 +9138,7 @@
           ],
           "result": "Returns OK or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
@@ -9236,7 +9192,7 @@
           ],
           "result": "Returns OK or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
@@ -9293,7 +9249,7 @@
           ],
           "result": "Returns OK or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
@@ -9342,7 +9298,7 @@
           ],
           "result": "Returns OK or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
@@ -9393,7 +9349,7 @@
           ],
           "result": "Returns OK or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
@@ -9445,7 +9401,7 @@
           ],
           "result": "Returns OK or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
@@ -11428,54 +11384,6 @@
         }
       ]
     },
-    "Msgbox": {
-      "component": "Msgbox",
-      "function_count": 1,
-      "status_counts": {
-        "free": 1,
-        "licensed": 0,
-        "unknown_license": 0
-      },
-      "prerelease_count": 0,
-      "deprecated_count": 0,
-      "requires_addon": null,
-      "functions": [
-        {
-          "name": "Msgbox",
-          "signature": "MBS( \"Msgbox\"; Value... )",
-          "description": "A simple method to show a dialog box with one text. If you need more, check the Dialog functions. This function takes variable number of parameters. Pass as much parameters as needed separated by the semicolon in FileMaker. Please repeat Value parameter as often as you need.",
-          "parameters": [
-            {
-              "name": "Value...",
-              "description": "The values to show. You can put several values there.",
-              "example": "\"Hello World\"",
-              "optional": false
-            }
-          ],
-          "result": "Returns OK.",
-          "version_introduced": "2.2",
-          "prerelease": false,
-          "deprecated": false,
-          "compatibility": {
-            "macos": true,
-            "windows": true,
-            "linux": true,
-            "server": false,
-            "ios_sdk": true
-          },
-          "examples": [
-            {
-              "label": "Shows a message box:",
-              "text_code": "MBS\n(\"Msgbox\"; \"The client \";\n$ClientName\n; \" needs project \";\n$project\n; \" done.\")\nShows a message box:",
-              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS(\"Msgbox\"; \"The client \"; $ClientName; \" needs project \"; $project; \" done.\")</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
-            }
-          ],
-          "see_also": [],
-          "status": "free",
-          "url": "https://www.mbsplugins.eu/Msgbox.md"
-        }
-      ]
-    },
     "NSEventFilter": {
       "component": "NSEventFilter",
       "function_count": 3,
@@ -12719,7 +12627,7 @@
         "licensed": 6,
         "unknown_license": 0
       },
-      "prerelease_count": 2,
+      "prerelease_count": 0,
       "deprecated_count": 0,
       "requires_addon": null,
       "functions": [
@@ -12743,7 +12651,7 @@
           ],
           "result": "Returns OK or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
@@ -13020,7 +12928,7 @@
           ],
           "result": "Returns JSON array or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
@@ -13471,6 +13379,85 @@
           ],
           "status": "free",
           "url": "https://www.mbsplugins.eu/PrinterSetPrinter.md"
+        }
+      ]
+    },
+    "StoreRegistration": {
+      "component": "StoreRegistration",
+      "function_count": 1,
+      "status_counts": {
+        "free": 1,
+        "licensed": 0,
+        "unknown_license": 0
+      },
+      "prerelease_count": 0,
+      "deprecated_count": 0,
+      "requires_addon": null,
+      "functions": [
+        {
+          "name": "StoreRegistration",
+          "signature": "MBS( \"StoreRegistration\"; Licensee Name; Component; License Type; Expire Month; Serial number )",
+          "description": "Stores registration on Mac in preferences file of FileMaker so the plugin can auto register itself on startup of FileMaker. This is very useful for trainings where you want to preinstall license on FileMaker installations. Added Windows support in plugin version 4.4. You can clear the license with ClearRegistration function. Added Linux support for 7.5. Saves in preferences file on Mac and Linux, saves to registry on Windows. To store the registration on a FileMaker Server permanently, it is sufficient to call the StoreRegistration function only once by opening a file (e.g. the Registration.fmp12 file) with a OnFirstWindowOpen-Script and a single line of code like this: Set Variable [ $r; Value: MBS( \"StoreRegistration\"; $name; \"Complete\"; \"5 seat\"; $date; $code) ]. After opening it once and thus writing the registration file to the preference file, it can be closed and removed from the server. Currently on Windows the key is written encrypted to the registry into the HKEY_CURRENT_USER\\Software\\FileMaker\\RegistrationMBS entry. On macOS and iOS, we write a RegistrationMBS entry into the com.filemaker.client.pro12.plist file or for Claris Pro into the com.claris.pro.plist file. For Linux the license is saved to /opt/FileMaker/FileMaker Server/MBS.license file. If you use this in a vertical solution, please make sure you update the license key before updating the plugin to avoid the user seeing an error dialog about an old license. Also make sure that every major update you make calls StoreRegistration with a new key to replace the old key stored in preferences. And consider getting a multi year update from us, so you only change license key every few years.",
+          "parameters": [
+            {
+              "name": "Licensee Name",
+              "description": "This is the name of the person or organization that holds the license for the plug-in",
+              "example": "Your Name",
+              "optional": false
+            },
+            {
+              "name": "Component",
+              "description": "The component that was licensed. For example \"Complete\"",
+              "example": null,
+              "optional": false
+            },
+            {
+              "name": "License Type",
+              "description": "Seats purchased. For example, \"1 seat\", \"10 seats\", \"Developer\"",
+              "example": "1 Seat",
+              "optional": false
+            },
+            {
+              "name": "Expire Month",
+              "description": "This is the month in which the serial will expire for new versions of the plug-in in YYYYMM format. Plug-in released before the end of that month will continue to work forever. New Releases after that date will require a renewal",
+              "example": "200708",
+              "optional": false
+            },
+            {
+              "name": "Serial number",
+              "description": "The license number",
+              "example": "your serial number",
+              "optional": false
+            }
+          ],
+          "result": "Returns OK on success.",
+          "version_introduced": "3.0",
+          "prerelease": false,
+          "deprecated": false,
+          "compatibility": {
+            "macos": true,
+            "windows": true,
+            "linux": true,
+            "server": true,
+            "ios_sdk": true
+          },
+          "examples": [
+            {
+              "label": "Stores registration:",
+              "text_code": "$r\n=\nMBS\n( \"StoreRegistration\";\n$name\n; \"Complete\"; \"5 seat\";\n$date\n;\n$code\n)\nStores registration:",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>MBS( \"StoreRegistration\"; $name; \"Complete\"; \"5 seat\"; $date; $code)</Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$r</Name>\n  </Step>\n</fmxmlsnippet>"
+            },
+            {
+              "label": "Register with license values in a text field:",
+              "text_code": "Set Variable [\n$result\n; Value: Evaluate(\"\nMBS\n(\\\"StoreRegistration\\\"; \" &\nRegister::License\n& \")\") ]\nRegister with license values in a text field:",
+              "xml_code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<fmxmlsnippet type=\"FMObjectList\">\n  <Step enable=\"True\" id=\"141\" name=\"Set Variable\">\n    <Value>\n      <Calculation>Evaluate(\"MBS(\\\"StoreRegistration\\\"; \" &amp; Register::License &amp; \")\") </Calculation>\n    </Value>\n    <Repetition>\n      <Calculation>1</Calculation>\n    </Repetition>\n    <Name>$result</Name>\n  </Step>\n</fmxmlsnippet>"
+            }
+          ],
+          "see_also": [
+            "ClearRegistration"
+          ],
+          "status": "free",
+          "url": "https://www.mbsplugins.eu/StoreRegistration.md"
         }
       ]
     },

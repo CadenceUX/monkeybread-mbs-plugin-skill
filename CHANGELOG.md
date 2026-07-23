@@ -1,5 +1,27 @@
 # Changelog
 
+## v1.4 — 2026-07-23
+
+MBS Plugin 16.3 released (21 July 2026) — catalog rebuilt to clear the prerelease flags
+from the v1.3 build and confirm the site against the new baseline.
+
+- **Rebuilt from a fresh live crawl** now that 16.3 is the latest *shipped* release.
+  `plugin_version_released_at_build` moves from `16.2` to `16.3`.
+- **All 39 `prerelease: true` flags from v1.3 cleared and verified.** Every one of the
+  39 functions flagged ahead-of-release in v1.3 (CURL, XL, Encryption, List, MongoDB,
+  Printer, CNContactPicker, Window, Keychain, SystemInfo, ScriptWorkspace, SerialPort)
+  matches Monkeybread's own 16.3 release notes exactly — confirmed function-for-function
+  before clearing, not just cleared on the assumption that a version bump means they
+  shipped. `prerelease_function_count` is `0` in this build.
+- **Catalog size unchanged** — still 7,807 enumerated functions across 245 components,
+  396 deprecated. The site's `index.md` headline counter is also unchanged at 7,919 (same
+  ~112 residual noted in v1.3), and no new functions have been documented beyond the
+  16.3 set since the last build.
+- **Noted for future rebuilds:** the vendor's own `newinversion163.md` page still labels
+  itself "(Pre-Release)" even though the release-notes page confirms 16.3 shipped with a
+  full dated changelog (21 July 2026) — a documentation-freshness lag on Monkeybread's
+  side, not a signal to trust over the release-notes page when the two disagree.
+
 ## v1.3 — 2026-07-05
 
 - **Replaced the docset pipeline with a live-site crawl.** The vendor now publishes

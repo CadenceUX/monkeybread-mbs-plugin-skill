@@ -2,22 +2,22 @@
 compatibility: Claude.ai, Claude Chat, Claude Code
 metadata:
   "Built and maintained": "Darrin Southern from CadenceUX"
-  version: "1.3"
+  version: "1.4"
 name: monkeybread-mbs-plugin
 description: |
   Reference skill for the MBS FileMaker Plugin by Monkeybread Software — covers all
   7,807 functions across 245 components (SQL, SyntaxColoring, GameKit, DynaPDF, XL,
   CURL, GMImage, Events, WebView, Window, FM, JSON, MapView, MongoDB, Files, Text,
   ListDialog, MenuItem, Dialog, Math, and many more), including 396 deprecated
-  functions and 39 documented ahead of release (tagged prerelease). Use whenever an
+  functions, current as of plugin version 16.3. Use whenever an
   MBS( "Component.Function"; ... ) call appears in a FileMaker calculation or script,
   or when the user asks about the MBS Plugin, Monkeybread Software, or a specific MBS
   function. Reference data lives in references/group-NN.json (20 grouped files),
   indexed by references/index.json. Every entry has a status — free, licensed (works
   unregistered, nags with a reminder dialog until registered), or unknown_license (no
   vendor marker) — plus a requires_addon note for DynaPDF/XL/Saxon, which need a
-  separate paid add-on. Flag licensed, unknown, add-on, deprecated, and prerelease
-  status — don't assume free or current.
+  separate paid add-on. Flag licensed, unknown, add-on, and deprecated status — don't
+  assume free or current.
 ---
 
 # MBS FileMaker Plugin — Reference Skill
@@ -27,10 +27,11 @@ description: |
 from its markdown mirror (`index.md` → `component_X.md` pages, plus `deprecated.md`),
 detail parsed from the matching `.shtml` pages (only the HTML carries the paste-ready
 `fmxmlsnippet` examples).
-**Plugin version at build:** 16.2 was the latest *released* version (per the vendor's
-release notes page) when this catalog was built on 2026-07-05. The doc site also
-already documented 39 functions for the in-development 16.3 — included and tagged
-`"prerelease": true` (see below).
+**Plugin version at build:** 16.3 was the latest *released* version (per the vendor's
+release notes page) when this catalog was built/rebuilt on 2026-07-23. (The 16.2-era
+build tagged 39 functions `prerelease: true` because 16.3 was still in development
+then — this rebuild, after 16.3 shipped on 21 July 2026, confirmed all 39 against the
+vendor's own release notes and cleared the flag; none currently carry it.)
 **Live doc URL pattern:** `https://www.mbsplugins.eu/{FunctionName}.md` (strip the dots
 from the function name, e.g. `Dialog.GetFieldText` → `DialogGetFieldText.md`). The `.md`
 pages are clean markdown — much better for fetching than the older `.shtml` pattern,
@@ -57,11 +58,13 @@ Two boolean flags sit alongside `status` on every entry:
   and steer users toward the replacement in new code. Whole components can be deprecated
   (Calendar and Addressbook are the largest — superseded by the newer Events and Contacts
   components).
-- **`prerelease` (39 functions)** — documented by the vendor for a plugin version *newer
-  than the latest shipped release* at build time (16.3 vs released 16.2). The function
-  exists in the docs but may not be in the user's installed plugin yet. Tell the user it
-  needs plugin version 16.3+, which may not be released. Once 16.3 ships this flag is
-  stale-conservative (the function simply works); the next catalog rebuild clears it.
+- **`prerelease` (0 functions currently)** — documented by the vendor for a plugin version
+  *newer than the latest shipped release* at build time. None right now, since this build
+  is current with the latest shipped release (16.3). If the field is `true` on any entry
+  in a future rebuild, it means the vendor's docs are ahead of what's released — tell the
+  user the function may not be in their installed plugin yet, and treat the flag as
+  stale-conservative once that version ships (the function simply works by then; the next
+  rebuild clears it).
 
 Three components additionally require a **separate paid add-on** beyond the base MBS
 plugin registration — check `requires_addon` on the component file (also listed in
@@ -120,20 +123,18 @@ MBS-related question — run this check once:
 1. `web_fetch` `https://www.monkeybreadsoftware.com/filemaker/releasenotes.shtml`
 2. Find the topmost "Release notes for version X.X" heading — this is the current
    plugin version Monkeybread Software has released.
-3. Compare it with this catalog's `plugin_version_released_at_build` (currently `"16.2"`
+3. Compare it with this catalog's `plugin_version_released_at_build` (currently `"16.3"`
    — see `references/index.json`).
 4. If the live version is higher, prepend this notice to your first response:
 
    > ⚠️ **MBS Plugin update available**
    > A newer MBS plugin version is out (v[X.X]). This skill's catalog was built when
-   > v16.2 was the latest release (16.3 pre-release functions are already included and
-   > tagged). Functions added after the build won't be here — check
-   > `https://www.mbsplugins.eu/{FunctionName}.md` for anything not found locally, or
-   > regenerate the catalog (see "Regenerating the catalog" below).
-   >
-   > Note: if the new release is 16.3, the 39 `prerelease`-tagged functions in this
-   > catalog are now shipped — treat them as current, and rebuild when convenient to
-   > clear the flags.
+   > v16.3 was the latest release. Functions added after the build won't be here —
+   > check `https://www.mbsplugins.eu/{FunctionName}.md` for anything not found
+   > locally, or regenerate the catalog (see "Regenerating the catalog" below). If any
+   > entries in this catalog are tagged `prerelease: true` for the new version, treat
+   > them as current now that it's shipped, and rebuild when convenient to clear the
+   > flags.
 
 5. Do not repeat the notice again in the same session.
 6. If the fetch fails, times out, or the page layout has changed, skip silently —
@@ -160,7 +161,7 @@ question, run once:
 
 1. Fetch `https://github.com/CadenceUX/monkeybread-mbs-plugin-skill/raw/main/VERSION`
 2. Parse the returned string as the latest available version
-3. Compare with this skill's installed version (currently `"1.3"`)
+3. Compare with this skill's installed version (currently `"1.4"`)
 4. If latest > installed, prepend this notice to your first response:
 
    > ⚠️ **Skill update available**
@@ -177,7 +178,7 @@ question, run once:
 
 When fetching a specific function's live `.md` page (`url` field) to verify or supplement
 a catalog entry, the page's own platform table shows the version that introduced it.
-If that version is higher than `16.2` and the function isn't already tagged `prerelease`
+If that version is higher than `16.3` and the function isn't already tagged `prerelease`
 in this catalog, the function was added after this catalog was built — note that to the
 user rather than treating the live page's extra detail as already reflected locally.
 
@@ -194,7 +195,7 @@ in both the `.md` and `.shtml` versions):
 2. This catalog doesn't store that date per function, so there's no exact baseline to diff
    against — treat it as **informational context** for the user (e.g. "this page was last edited
    on [date]") rather than a firm drift flag.
-3. If the "last changed" date is after 2026-07-05 (this catalog's build date) and the user's
+3. If the "last changed" date is after 2026-07-23 (this catalog's build date) and the user's
    question concerns exact parameter behaviour or option names, mention that the live page may
    have details not reflected in the local catalog.
 4. Skip this for routine lookups — only worth doing when the user asks if something is current, or

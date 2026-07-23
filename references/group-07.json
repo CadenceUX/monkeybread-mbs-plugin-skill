@@ -1062,6 +1062,60 @@
         }
       ]
     },
+    "CGPSConverter": {
+      "component": "CGPSConverter",
+      "function_count": 1,
+      "status_counts": {
+        "free": 1,
+        "licensed": 0,
+        "unknown_license": 0
+      },
+      "prerelease_count": 0,
+      "deprecated_count": 1,
+      "requires_addon": null,
+      "functions": [
+        {
+          "name": "CGPSConverter.Convert",
+          "signature": "MBS( \"CGPSConverter.Convert\"; PSContainer { ; Name; DontRenderPreview } )",
+          "description": "Converts PostScript to PDF. Won't work with Future FileMaker versions in macOS Sonoma since Apple removed the feature from the OS.",
+          "parameters": [
+            {
+              "name": "PSContainer",
+              "description": "A container value with a postscript file data.",
+              "example": null,
+              "optional": false
+            },
+            {
+              "name": "Name",
+              "description": "The file name to use for the PDF.",
+              "example": null,
+              "optional": true
+            },
+            {
+              "name": "DontRenderPreview",
+              "description": "Pass 1 to not create a JPEG with preview of first page as part of the container.",
+              "example": "0",
+              "optional": true
+            }
+          ],
+          "result": "A container value with PDF data.",
+          "version_introduced": "2.4",
+          "prerelease": false,
+          "deprecated": true,
+          "compatibility": {
+            "macos": true,
+            "windows": false,
+            "linux": false,
+            "server": true,
+            "ios_sdk": false
+          },
+          "examples": [],
+          "see_also": [],
+          "status": "free",
+          "url": "https://www.mbsplugins.eu/CGPSConverterConvert.md"
+        }
+      ]
+    },
     "CoreML": {
       "component": "CoreML",
       "function_count": 20,
@@ -4606,49 +4660,6 @@
           "see_also": [],
           "status": "free",
           "url": "https://www.mbsplugins.eu/iOSDeviceUserInterfaceIdiom.md"
-        }
-      ]
-    },
-    "IsIOS": {
-      "component": "IsIOS",
-      "function_count": 1,
-      "status_counts": {
-        "free": 1,
-        "licensed": 0,
-        "unknown_license": 0
-      },
-      "prerelease_count": 0,
-      "deprecated_count": 0,
-      "requires_addon": null,
-      "functions": [
-        {
-          "name": "IsIOS",
-          "signature": "MBS( \"IsIOS\" )",
-          "description": "Whether we run on iOS. Returns 1 if running on iOS and 0 if not. For FileMaker 14 and older this is definitive always 0. If someday we get a plugin SDK for iOS, we can already have the function to return this.",
-          "parameters": [],
-          "result": "Returns 1, 0 or error.",
-          "version_introduced": "6.1",
-          "prerelease": false,
-          "deprecated": false,
-          "compatibility": {
-            "macos": true,
-            "windows": true,
-            "linux": true,
-            "server": true,
-            "ios_sdk": true
-          },
-          "examples": [],
-          "see_also": [
-            "CURL.SetOptionCAInfo",
-            "IsMacOS",
-            "IsWindows",
-            "PDFKit.GetPDFPageImage",
-            "WinPDF.PageImageAtSize",
-            "XL.Initialize",
-            "XL.IsInitialized"
-          ],
-          "status": "free",
-          "url": "https://www.mbsplugins.eu/IsIOS.md"
         }
       ]
     },

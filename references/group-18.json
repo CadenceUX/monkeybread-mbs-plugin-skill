@@ -1,43 +1,5 @@
 {
   "components": {
-    "ClearErrors": {
-      "component": "ClearErrors",
-      "function_count": 1,
-      "status_counts": {
-        "free": 1,
-        "licensed": 0,
-        "unknown_license": 0
-      },
-      "prerelease_count": 0,
-      "deprecated_count": 0,
-      "requires_addon": null,
-      "functions": [
-        {
-          "name": "ClearErrors",
-          "signature": "MBS( \"ClearErrors\" )",
-          "description": "Clears error counter. Call this on the beginning of a script where you like to track errors.",
-          "parameters": [],
-          "result": "Returns OK or error.",
-          "version_introduced": "12.2",
-          "prerelease": false,
-          "deprecated": false,
-          "compatibility": {
-            "macos": true,
-            "windows": true,
-            "linux": true,
-            "server": true,
-            "ios_sdk": true
-          },
-          "examples": [],
-          "see_also": [
-            "AddToErrorLog",
-            "ErrorLog"
-          ],
-          "status": "free",
-          "url": "https://www.mbsplugins.eu/ClearErrors.md"
-        }
-      ]
-    },
     "CompileTime": {
       "component": "CompileTime",
       "function_count": 1,
@@ -3318,6 +3280,43 @@
           ],
           "status": "licensed",
           "url": "https://www.mbsplugins.eu/ImagePickerWriteVideoToSavedPhotosAlbum.md"
+        }
+      ]
+    },
+    "Is64bit": {
+      "component": "Is64bit",
+      "function_count": 1,
+      "status_counts": {
+        "free": 1,
+        "licensed": 0,
+        "unknown_license": 0
+      },
+      "prerelease_count": 0,
+      "deprecated_count": 0,
+      "requires_addon": null,
+      "functions": [
+        {
+          "name": "Is64bit",
+          "signature": "MBS( \"Is64bit\" )",
+          "description": "Checks if platform is 64bit or 32bit. Returns 1 for 64bit (e.g. FileMaker Server 13) or 0 for 32 bit (FileMaker Pro 13) Returns 1 on FileMaker Cloud as this uses a 64-bit Linux. See SystemInfo.Is64bitWindows to check if you are 32-bit Windows app on a 64-bit Windows OS.",
+          "parameters": [],
+          "result": "Returns 1 or 0.",
+          "version_introduced": "5.0",
+          "prerelease": false,
+          "deprecated": false,
+          "compatibility": {
+            "macos": true,
+            "windows": true,
+            "linux": true,
+            "server": true,
+            "ios_sdk": true
+          },
+          "examples": [],
+          "see_also": [
+            "SystemInfo.Is64bitWindows"
+          ],
+          "status": "free",
+          "url": "https://www.mbsplugins.eu/Is64bit.md"
         }
       ]
     },

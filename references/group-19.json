@@ -2837,8 +2837,8 @@
         }
       ]
     },
-    "IsIOSDevice": {
-      "component": "IsIOSDevice",
+    "IsIOSSimulator": {
+      "component": "IsIOSSimulator",
       "function_count": 1,
       "status_counts": {
         "free": 1,
@@ -2850,9 +2850,9 @@
       "requires_addon": null,
       "functions": [
         {
-          "name": "IsIOSDevice",
-          "signature": "MBS( \"IsIOSDevice\" )",
-          "description": "Queries whether run on iOS device. Returns 0 in simulator or on macOS, Windows and Linux.",
+          "name": "IsIOSSimulator",
+          "signature": "MBS( \"IsIOSSimulator\" )",
+          "description": "Queries whether run on iOS simulator. Returns 0 on iOS Device or on macOS, Windows and Linux.",
           "parameters": [],
           "result": "Returns 1 or 0.",
           "version_introduced": "8.0",
@@ -2873,10 +2873,10 @@
             }
           ],
           "see_also": [
-            "IsIOSSimulator"
+            "IsIOSDevice"
           ],
           "status": "free",
-          "url": "https://www.mbsplugins.eu/IsIOSDevice.md"
+          "url": "https://www.mbsplugins.eu/IsIOSSimulator.md"
         }
       ]
     },

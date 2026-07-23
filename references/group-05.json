@@ -620,7 +620,7 @@
         "licensed": 11,
         "unknown_license": 0
       },
-      "prerelease_count": 2,
+      "prerelease_count": 0,
       "deprecated_count": 8,
       "requires_addon": null,
       "functions": [
@@ -1312,7 +1312,7 @@
           ],
           "result": "Returns OK or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
@@ -1372,7 +1372,7 @@
           ],
           "result": "Returns OK or error.",
           "version_introduced": "16.3",
-          "prerelease": true,
+          "prerelease": false,
           "deprecated": false,
           "compatibility": {
             "macos": true,
