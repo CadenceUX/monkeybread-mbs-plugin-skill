@@ -1,21 +1,59 @@
 {
-  "description": "Test prompts for monkeybread-mbs-plugin. Each case exercises the documented lookup path (references/index.json -> group-NN.json -> component -> function) plus one status/flag behaviour the skill must surface.",
+  "skill": "monkeybread-mbs-plugin",
   "cases": [
     {
-      "prompt": "What does MBS(\"Dialog.SetMessage\") do and what are its parameters?",
-      "expected": "Resolves Dialog component via references/index.json to its group file, returns the function's signature, description, and parameters from the catalog entry, and states its licensing status. Does not claim it is free without checking the status field."
+      "id": "lookup-status",
+      "prompt": "What does MBS(\"Dialog.SetMessage\") do, what parameters does it take, and will it run on FileMaker Server?",
+      "must": [
+        "Resolves the Dialog component through references/index.json to its group file and answers from the catalog entry",
+        "Gives the signature and parameters from the entry",
+        "States the status from the entry (free)",
+        "Says it is not supported on Server (compatibility.server is false)"
+      ],
+      "must_not": ["Claims it runs on Server", "Answers from memory without opening the catalog"]
     },
     {
-      "prompt": "Can I use MBS(\"MongoDB.GridFS.Drop\") in my FileMaker solution?",
-      "expected": "Finds the entry, sees prerelease: true and version_introduced 16.3, and warns that the function is documented for plugin version 16.3 which may not be released/installed yet — rather than presenting it as available in the shipping 16.2 plugin."
+      "id": "deprecated",
+      "prompt": "My legacy script calls MBS(\"Calendar.NewEvent\"). Is that still OK for new work?",
+      "must": [
+        "Reports deprecated: true and that it still runs",
+        "Points to the newer Events component as the replacement",
+        "Mentions it is macOS only and licensed"
+      ],
+      "must_not": ["Recommends it for new code"]
     },
     {
-      "prompt": "My legacy script calls MBS(\"Calendar.NewEvent\") — is that still OK?",
-      "expected": "Finds the entry, sees deprecated: true, explains it still runs but is on the vendor's deprecated list, and points at the replacement (the newer Events component) rather than endorsing it for new code."
+      "id": "addon",
+      "prompt": "Can I create PDFs with MBS DynaPDF.New on our existing MBS licence?",
+      "must": [
+        "Says DynaPDF needs a separate DynaPDF licence on top of the base MBS registration",
+        "Sends the user to Monkeybread for current pricing"
+      ],
+      "must_not": ["Quotes a specific dollar price as current"]
     },
     {
+      "id": "example-no-xml",
+      "prompt": "Show me a FileMaker script that uses MBS CURL to download a URL, so I can add it to my file.",
+      "must": [
+        "Gives readable script steps (Set Variable [ ... ] lines) based on the catalog examples",
+        "Says to write the steps into the file through ADT when installed, or enter them by hand"
+      ],
+      "must_not": ["Produces fmxmlsnippet or any clipboard XML"]
+    },
+    {
+      "id": "top-level-function",
       "prompt": "What does the MBS Trace function do?",
-      "expected": "Resolves the dot-less top-level function Trace via its own component key 'Trace' in references/index.json (component equals the function name when there is no dot) and returns its entry."
+      "must": [
+        "Finds the dot-less function under its own component key Trace in references/index.json",
+        "Returns its description and free status"
+      ],
+      "must_not": ["Says the function does not exist"]
     }
-  ]
+  ],
+  "near_misses": [
+    "What does BE_HTTP_POST return? (goya-be-plugin)",
+    "How do I use bBox_Python3Run? (beezwax-bbox-plugin)",
+    "What's the syntax for FileMaker's JSONSetElement? (claris-filemaker-pro)"
+  ],
+  "version": "2.0.0"
 }

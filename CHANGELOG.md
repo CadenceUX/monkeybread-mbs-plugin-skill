@@ -1,5 +1,41 @@
 # Changelog
 
+## [2.0.0] — 2026-10-11
+
+Rebuilt for the Claris Agentic Development Toolkit (ADT) and Anthropic's skill authoring best
+practices, using `cadenceux-skill-creator` 2.0.0, against MBS Plugin 16.4.
+
+### Changed
+
+- **Catalog rebuilt from a fresh live crawl** for MBS Plugin 16.4 (released 22 September 2026):
+  7,859 functions across 245 components (up from 7,807), 400 deprecated (up from 396), status
+  free 2,586 / licensed 4,698 / unknown 575. No prerelease functions. The site's `index.md`
+  counter reads 7,971; the residual is not linked from any listing page, as before.
+- **Clipboard XML removed.** Every example is now a `label` plus readable `script` (rendered
+  from the vendor's snippet by `maintainer/render_script.py`); the `text_code` / `xml_code` pair
+  is gone, and fmxmlsnippet blocks the parser had swept into 272 function descriptions are
+  stripped. With ADT, scripts go into the file directly.
+- **Descriptions cleaned.** On 859 pages the parser had run the examples, see-also list, release
+  notes, blog titles and page footer into `description`; each is now cut at the first of those
+  sections (`trim_description` in the build). With the XML gone, the catalog shrinks from 23 MB
+  to 13 MB.
+- **No add-on prices.** DynaPDF, XL and Saxon add-on text names the licence and sends users to
+  Monkeybread for pricing, so the skill can't quote stale figures.
+- **Frontmatter to the CadenceUX standard** (third-person description with "Use when" and "Not
+  for", no counts, `license`, `compatibility`, `metadata.author`); `.claude-plugin/plugin.json`
+  added. Counts now live only in `references/index.json`.
+- **Build tools moved to `maintainer/`** with a README; `build_catalog.py` reads the skill
+  version from `VERSION` and uses the renderer. The SKILL.md body drops the regeneration detail.
+- Evals rewritten with `must` / `must_not` and near-misses; the stale 16.3 prerelease case is
+  replaced by add-on and no-XML cases.
+
+### Verified
+
+- The integrated build (cached pages, renderer in the pipeline) produced function entries
+  identical to the hand-processed catalog for all 7,859 functions.
+- Evals on Haiku, Sonnet and Opus: 5/5 each (`evals/results-2026-10-11.md`).
+- Release notes page reports 16.4 as the latest version (checked 2026-10-11).
+
 ## v1.4 — 2026-07-23
 
 MBS Plugin 16.3 released (21 July 2026) — catalog rebuilt to clear the prerelease flags

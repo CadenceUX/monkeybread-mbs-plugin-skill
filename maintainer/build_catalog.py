@@ -7,7 +7,8 @@ Enumeration comes from the vendor's markdown mirror -- index.md lists every
 component as component_X.md, and each component page lists every function
 with a link to its doc-page stem. Function detail is parsed from the .shtml
 HTML pages (same fixed layout the old Dash-docset pipeline used) because
-only the HTML carries the paste-ready fmxmlsnippet XML examples (the .md
+only the HTML carries the examples (vendor fmxmlsnippet XML, rendered to readable
+script steps by render_script.py; the XML itself is not shipped) (the .md
 mirror drops the copy-box textarea that holds them).
 
 Output is unchanged in shape from v1.2: components bin-packed by size into
@@ -41,6 +42,7 @@ listing page. Deprecated functions still exist and are documented -- some
 remain on their component page, others are listed only on deprecated.md --
 so both sources are enumerated and merged.
 """
+from render_script import render, strip_xml, trim_description
 import json
 import re
 import sys
@@ -71,12 +73,12 @@ FETCH_RETRIES = 4
 # paid add-on beyond the base MBS plugin license -- distinct from the per-
 # function free/licensed/unknown_license status.
 ADDON_COMPONENTS = {
-    "DynaPDF": "Requires a separate DynaPDF add-on license (Starter $249 / Lite $499 / "
-    "Pro $899 / Enterprise $1,599, plus an optional PDF/A add-on) on top of the base MBS plugin.",
-    "XL": "Requires a separate LibXL license ($219 per platform, or $1,199 Enterprise) "
-    "on top of the base MBS plugin.",
-    "Saxon": "Requires a separate Saxon subscription (Saxon-PE $325/yr or Saxon-EEV $800/yr) "
-    "on top of the base MBS plugin.",
+    "DynaPDF": "Requires a separate DynaPDF licence (Starter, Lite, Pro or Enterprise, plus an "
+    "optional PDF/A add-on) on top of the base MBS plugin. Check current pricing with Monkeybread.",
+    "XL": "Requires a separate LibXL licence on top of the base MBS plugin. "
+    "Check current pricing with Monkeybread.",
+    "Saxon": "Requires a separate Saxon-PE or Saxon-EE licence on top of the base MBS plugin. "
+    "Check current pricing with Monkeybread.",
 }
 
 
@@ -302,7 +304,11 @@ def parse_examples(soup):
             if textarea:
                 textarea.decompose()
             text_code = sib.get_text("\n", strip=True)
-            examples.append({"label": label, "text_code": text_code or None, "xml_code": xml_code})
+            try:
+                script = render(xml_code) if xml_code else (text_code or "")
+            except Exception:
+                script = text_code or ""
+            examples.append({"label": label, "script": script})
             label = None
     return examples
 
@@ -343,9 +349,9 @@ def parse_function_page(html, name, stem, released_tuple, deprecated):
     return {
         "name": page_name,
         "signature": parse_signature(soup),
-        "description": parse_simple_section(soup, "Description") or short_desc,
+        "description": trim_description(strip_xml(parse_simple_section(soup, "Description") or short_desc)),
         "parameters": parse_parameters(soup),
-        "result": parse_simple_section(soup, "Result"),
+        "result": strip_xml(parse_simple_section(soup, "Result")),
         "version_introduced": version,
         "prerelease": prerelease,
         "deprecated": deprecated,
@@ -433,7 +439,7 @@ def main():
 
     index = {
         "skill": "monkeybread-mbs-plugin",
-        "version": "v1.3",
+        "version": (Path(__file__).resolve().parent.parent / "VERSION").read_text().strip(),
         "plugin_name": "MBS FileMaker Plugin",
         "plugin_version_released_at_build": released,
         "site_function_count_at_build": claimed_count,
