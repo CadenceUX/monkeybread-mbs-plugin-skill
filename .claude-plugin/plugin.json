@@ -1,7 +1,7 @@
 {
   "name": "monkeybread-mbs-plugin",
   "displayName": "MBS Plugin Reference",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Reference for the MBS FileMaker Plugin from Monkeybread Software: every documented function with signature, parameters, platform support, licensing status and readable script examples, built from the vendor's documentation.",
   "author": {
     "name": "Darrin Southern",

@@ -14,7 +14,7 @@ compatibility: >-
   or code execution; the live-doc and release checks need web fetch.
 metadata:
   author: Darrin Southern, CadenceUX
-  version: "2.0.0"
+  version: "2.0.1"
 ---
 
 # MBS FileMaker Plugin — Reference Skill
@@ -155,7 +155,7 @@ question, run once:
 
 1. Fetch `https://github.com/CadenceUX/monkeybread-mbs-plugin-skill/raw/main/VERSION`
 2. Parse the returned string as the latest available version
-3. Compare with this skill's installed version (currently `"2.0.0"`)
+3. Compare with this skill's installed version (currently `"2.0.1"`)
 4. If latest > installed, prepend this notice to your first response:
 
    > ⚠️ **Skill update available**

@@ -1,6 +1,6 @@
 {
  "skill": "monkeybread-mbs-plugin",
- "version": "2.0.0",
+ "version": "2.0.1",
  "plugin_name": "MBS FileMaker Plugin",
  "plugin_version_released_at_build": "16.4",
  "site_function_count_at_build": 7971,

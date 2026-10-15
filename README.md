@@ -26,17 +26,6 @@ Built against MBS Plugin 16.4 on 2026-10-11. Counts live in `references/index.js
 
 ## Install
 
-**Claude desktop app (macOS):** download [`monkeybread-mbs-plugin.skill`](https://github.com/CadenceUX/monkeybread-mbs-plugin-skill/releases/latest/download/monkeybread-mbs-plugin.skill) and
-double-click it.
-
-**Claude.ai in a browser, or Claude Desktop → Customize → Skills → upload:** download
-[`monkeybread-mbs-plugin.zip`](https://github.com/CadenceUX/monkeybread-mbs-plugin-skill/releases/latest/download/monkeybread-mbs-plugin.zip) and upload it.
-
-> Use the files above, which are attached to the latest
-> [release](https://github.com/CadenceUX/monkeybread-mbs-plugin-skill/releases). Don't use GitHub's green
-> **Code → Download ZIP** button or a release's **Source code (zip)**: those are snapshots of
-> the repository, not a packaged skill, and Claude won't install them as one.
-
 **Claude Code** (from the `cadenceux` plugin marketplace):
 
 ```bash
@@ -44,8 +33,19 @@ claude plugin marketplace add https://github.com/CadenceUX/cadenceux-skills.git
 claude plugin install monkeybread-mbs-plugin@cadenceux
 ```
 
-**Cowork, or claude.ai as a plugin:** Customize → Plugins → Add marketplace from GitHub →
+**claude.ai and Cowork:** Customize → Plugins → Add marketplace from GitHub →
 `CadenceUX/cadenceux-skills`, then install **monkeybread-mbs-plugin**.
+
+**Claude desktop app (macOS):** download [`monkeybread-mbs-plugin.skill`](https://github.com/CadenceUX/monkeybread-mbs-plugin-skill/releases/latest/download/monkeybread-mbs-plugin.skill) and
+double-click it.
+
+**Claude.ai in a browser, as a single skill:** Customize → Skills → upload
+[`monkeybread-mbs-plugin.zip`](https://github.com/CadenceUX/monkeybread-mbs-plugin-skill/releases/latest/download/monkeybread-mbs-plugin.zip).
+
+> Both files are attached to the latest [release](https://github.com/CadenceUX/monkeybread-mbs-plugin-skill/releases).
+> Don't use GitHub's green **Code → Download ZIP** button or a release's **Source code (zip)**:
+> those are snapshots of the repository, not a packaged skill, and Claude won't install them
+> as one.
 
 ## Files
 
