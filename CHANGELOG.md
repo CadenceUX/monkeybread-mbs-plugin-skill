@@ -1,5 +1,54 @@
 # Changelog
 
+## [2.1.0] — 2026-11-18
+
+Catalog rebuilt for MBS Plugin 16.5 (released 10 November 2026) from a fresh live crawl, using
+`cadenceux-skill-creator` 2.4.0.
+
+### Added
+
+- **13 functions new in 16.5:** `FM.SelectFieldDefinition`, `FM.SelectTableOccurrence`,
+  `FoundationModels.Capabilities`, `FoundationModels.NewPrivateCloudComputeLanguageModel`,
+  `FoundationModels.PrivateCloudComputeQuota`, `FoundationModels.RespondToImage`,
+  `ScriptWorkspace.IsFocusOnScript`, `SendMail.SetSource`, and the new `WindowsCredentials`
+  component (`Delete`, `List`, `Read`, `SessionTypes`, `Write`).
+- Evals: `new-in-16-5`, `newly-deprecated` and `changed-signature` cases.
+
+### Changed
+
+- **Deprecated in 16.5:** all 49 `UserNotification` functions, in favour of `UNNotification`
+  (Monkeybread says they will be removed soon).
+- **Removed in 16.5:** `WebView.ShowDebugBar` (use `WebView.ShowDevTools`).
+- **27 signatures changed**, only some of them named in the release notes: the
+  `PDFKit.Open`/`OpenContainer`/`OpenPath`/`OpenURL` functions gained an optional `Password`, and
+  others such as `DynaPDF.CreateGoToEAction`, `GMImage.SetFontFamily`, `List.NotColumn`,
+  `Socket.ReadAllHex` and `MongoDB.GridFS.Find` were corrected or extended on the vendor's pages.
+- Vendor page edits picked up across existing entries: examples on 677 functions (101 gained
+  their first example), parameters on 563, descriptions on 329. `WebView.SearchText` now
+  supports macOS and iOS (WebKit 2).
+- **Example key material scrubbed.** A new `scrub()` step in `maintainer/build_catalog.py`
+  replaces real-looking credentials in Monkeybread's example code before the catalog is
+  written: AWS key pairs (`CURL.AWSPresignURL`, `Hash.SHA256.HMAC`) become
+  `YOUR_ACCESS_KEY_ID`/`YOUR_SECRET_ACCESS_KEY`, RSA private keys (`CURL.SetOptionSSLCert`,
+  `RSA.Sign`, `SSH.UserAuthPublicKey`) become `(your private key in PEM format)`, and
+  `domain.com` in credential URLs becomes the reserved `example.com`.
+- SKILL.md and README name 16.5 and the 2026-11-18 build.
+
+### Verified
+
+- Counts from the crawl: 7,871 functions across 246 components (up from 7,859 across 245),
+  448 deprecated, status free 2,589 / licensed 4,703 / unknown 579, no prerelease functions.
+  The site's `index.md` counter reads 7,983; the residual of 112 is not linked from any
+  listing page, the same gap as the 16.4 build.
+- Every function in `newinversion165.md` is in the catalog.
+- Evals on Haiku: 8/8 (`evals/results-2026-11-18.md`). The released 2.0.1 failed all three
+  new cases.
+- `validate_skill.py`: four "password inside a URL" hits remain in Monkeybread's MongoDB
+  examples (a `tester:1234` login on localhost in three, a `user:pass` Unix-socket URI in
+  `MongoDB.SetURI`). They are sample data, kept as the vendor wrote them, and are validator
+  false positives: the JSON-escaped quote after `localhost` hides the placeholder host, and a
+  socket path is not a hostname.
+
 ## [2.0.1] — 2026-10-16
 
 Packaging fix for GitHub installs, using `cadenceux-skill-creator` 2.1.2. No change to the

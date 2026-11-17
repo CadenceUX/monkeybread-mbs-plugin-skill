@@ -82,6 +82,43 @@ ADDON_COMPONENTS = {
 }
 
 
+# Key material in the vendor's example code. Monkeybread's pages carry a few
+# real-looking credentials in examples (AWS key pairs, PEM private keys) and
+# documentation URLs with passwords on a real domain. They are public on the
+# vendor's site, but a skill must not ship anything that looks like a secret
+# (the CadenceUX validator fails on them), so every string in an entry is
+# scrubbed to a placeholder before it is written.
+PEM_PRIVATE_KEY = re.compile(
+    r"-----BEGIN (?:RSA |EC |DSA |OPENSSH |ENCRYPTED )?PRIVATE KEY-----.*?-----END (?:RSA |EC |DSA |OPENSSH |ENCRYPTED )?PRIVATE KEY-----",
+    re.S,
+)
+AWS_KEY_ID = re.compile(r"\b(?:AKIA|ASIA)[0-9A-Z]{16}\b")
+# An AWS secret access key is 40 base64 characters; only replaced in text that
+# also held an access key ID, so other 40-character tokens are left alone.
+AWS_SECRET = re.compile(r"(?<![A-Za-z0-9/+])[A-Za-z0-9/+]{40}(?![A-Za-z0-9/+=])")
+# domain.com is a real domain; RFC 2606 reserves example.com for documentation.
+URL_CRED_DOMAIN = re.compile(r"(://[^/\s:@'\"]+:[^/\s@'\"]+@(?:[A-Za-z0-9-]+\.)*)domain\.com\b")
+
+
+def scrub_text(text):
+    text = PEM_PRIVATE_KEY.sub("(your private key in PEM format)", text)
+    if AWS_KEY_ID.search(text):
+        text = AWS_KEY_ID.sub("YOUR_ACCESS_KEY_ID", text)
+        text = AWS_SECRET.sub("YOUR_SECRET_ACCESS_KEY", text)
+    return URL_CRED_DOMAIN.sub(r"\1example.com", text)
+
+
+def scrub(value):
+    """Apply scrub_text to every string inside an entry."""
+    if isinstance(value, str):
+        return scrub_text(value)
+    if isinstance(value, list):
+        return [scrub(v) for v in value]
+    if isinstance(value, dict):
+        return {k: scrub(v) for k, v in value.items()}
+    return value
+
+
 def fetch(url, cache_dir=None, cache_key=None):
     if cache_dir is not None and cache_key is not None:
         cache_file = cache_dir / cache_key
@@ -417,6 +454,7 @@ def main():
             name, stem = futures[future]
             try:
                 _, entry = future.result()
+                entry = scrub(entry)
             except Exception as e:  # noqa: BLE001
                 failures.append((name, str(e)))
                 continue

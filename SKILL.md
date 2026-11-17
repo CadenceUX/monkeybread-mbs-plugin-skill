@@ -14,7 +14,7 @@ compatibility: >-
   or code execution; the live-doc and release checks need web fetch.
 metadata:
   author: Darrin Southern, CadenceUX
-  version: "2.0.1"
+  version: "2.1.0"
 ---
 
 # MBS FileMaker Plugin — Reference Skill
@@ -24,7 +24,7 @@ metadata:
 its markdown mirror (`index.md`, the `component_X.md` pages and `deprecated.md`), detail parsed
 from the matching `.shtml` pages.
 **Plugin version at build:** read `plugin_version_released_at_build` in `references/index.json`
-(16.4 at this release, built 2026-10-11).
+(16.5 at this release, built 2026-11-18).
 **Live doc URL pattern:** `https://www.mbsplugins.eu/{FunctionName}.md` (strip the dots
 from the function name, e.g. `Dialog.GetFieldText` → `DialogGetFieldText.md`). The `.md`
 pages are clean markdown — much better for fetching than the older `.shtml` pattern,
@@ -139,7 +139,7 @@ A cheaper secondary signal, useful when asked "is this catalog current?": fetch
 functions" headline against `site_function_count_at_build` in
 `references/index.json` — if the live number is higher, the vendor has documented new
 functions since this build. And `https://www.mbsplugins.eu/newinversion{NNN}.md` (e.g.
-`newinversion164.md`) lists exactly which functions a given version added — the fastest
+`newinversion165.md`) lists exactly which functions a given version added — the fastest
 way to see what a rebuild would pick up.
 
 This check is advisory only — never refuse to answer a function lookup because the
@@ -155,7 +155,7 @@ question, run once:
 
 1. Fetch `https://github.com/CadenceUX/monkeybread-mbs-plugin-skill/raw/main/VERSION`
 2. Parse the returned string as the latest available version
-3. Compare with this skill's installed version (currently `"2.0.1"`)
+3. Compare with this skill's installed version (currently `"2.1.0"`)
 4. If latest > installed, prepend this notice to your first response:
 
    > ⚠️ **Skill update available**
@@ -189,7 +189,7 @@ in both the `.md` and `.shtml` versions):
 2. This catalog doesn't store that date per function, so there's no exact baseline to diff
    against — treat it as **informational context** for the user (e.g. "this page was last edited
    on [date]") rather than a firm drift flag.
-3. If the "last changed" date is after 2026-10-11 (this catalog's build date) and the user's
+3. If the "last changed" date is after 2026-11-18 (this catalog's build date) and the user's
    question concerns exact parameter behaviour or option names, mention that the live page may
    have details not reflected in the local catalog.
 4. Skip this for routine lookups — only worth doing when the user asks if something is current, or

@@ -22,7 +22,7 @@ Built and maintained by [Darrin Southern](https://www.linkedin.com/in/darrin-sou
 - **Stays current:** checks Monkeybread's release notes and this repo's `VERSION` once a
   session, and tells you when either is newer.
 
-Built against MBS Plugin 16.4 on 2026-10-11. Counts live in `references/index.json`.
+Built against MBS Plugin 16.5 on 2026-11-18. Counts live in `references/index.json`.
 
 ## Install
 

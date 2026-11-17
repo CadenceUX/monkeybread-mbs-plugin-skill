@@ -10,7 +10,10 @@
         "States the status from the entry (free)",
         "Says it is not supported on Server (compatibility.server is false)"
       ],
-      "must_not": ["Claims it runs on Server", "Answers from memory without opening the catalog"]
+      "must_not": [
+        "Claims it runs on Server",
+        "Answers from memory without opening the catalog"
+      ]
     },
     {
       "id": "deprecated",
@@ -20,7 +23,9 @@
         "Points to the newer Events component as the replacement",
         "Mentions it is macOS only and licensed"
       ],
-      "must_not": ["Recommends it for new code"]
+      "must_not": [
+        "Recommends it for new code"
+      ]
     },
     {
       "id": "addon",
@@ -29,7 +34,9 @@
         "Says DynaPDF needs a separate DynaPDF licence on top of the base MBS registration",
         "Sends the user to Monkeybread for current pricing"
       ],
-      "must_not": ["Quotes a specific dollar price as current"]
+      "must_not": [
+        "Quotes a specific dollar price as current"
+      ]
     },
     {
       "id": "example-no-xml",
@@ -38,7 +45,9 @@
         "Gives readable script steps (Set Variable [ ... ] lines) based on the catalog examples",
         "Says to write the steps into the file through ADT when installed, or enter them by hand"
       ],
-      "must_not": ["Produces fmxmlsnippet or any clipboard XML"]
+      "must_not": [
+        "Produces fmxmlsnippet or any clipboard XML"
+      ]
     },
     {
       "id": "top-level-function",
@@ -47,7 +56,43 @@
         "Finds the dot-less function under its own component key Trace in references/index.json",
         "Returns its description and free status"
       ],
-      "must_not": ["Says the function does not exist"]
+      "must_not": [
+        "Says the function does not exist"
+      ]
+    },
+    {
+      "id": "new-in-16-5",
+      "prompt": "Can I save and read back a password in Windows Credential Manager from a FileMaker script using MBS?",
+      "must": [
+        "Finds the WindowsCredentials component in references/index.json and answers from its catalog entries (WindowsCredentials.Write and WindowsCredentials.Read)",
+        "Says it is Windows only",
+        "Says the functions were added in MBS 16.5"
+      ],
+      "must_not": [
+        "Says MBS has no such function",
+        "Answers with a macOS Keychain function instead"
+      ]
+    },
+    {
+      "id": "newly-deprecated",
+      "prompt": "I want macOS notifications in a new solution. Is MBS(\"UserNotification.Create\") the right call?",
+      "must": [
+        "Reports deprecated: true from the catalog entry",
+        "Points to the UNNotification component as the replacement"
+      ],
+      "must_not": [
+        "Recommends UserNotification for new work"
+      ]
+    },
+    {
+      "id": "changed-signature",
+      "prompt": "Can MBS PDFKit.OpenPath open a password-protected PDF?",
+      "must": [
+        "Gives the signature with the optional Password parameter: MBS( \"PDFKit.OpenPath\"; Path { ; Password } )"
+      ],
+      "must_not": [
+        "Says there is no way to pass a password"
+      ]
     }
   ],
   "near_misses": [
@@ -55,5 +100,5 @@
     "How do I use bBox_Python3Run? (beezwax-bbox-plugin)",
     "What's the syntax for FileMaker's JSONSetElement? (claris-filemaker-pro)"
   ],
-  "version": "2.0.0"
+  "version": "2.1.0"
 }
