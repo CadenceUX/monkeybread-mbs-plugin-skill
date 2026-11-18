@@ -16,8 +16,7 @@ Built and maintained by [Darrin Southern](https://www.linkedin.com/in/darrin-sou
   reminder dialog) or `unknown_license`. DynaPDF, XL and Saxon need a separate add-on licence.
 - **Flags deprecated functions** and points to the replacement, and checks platform support
   (macOS, Windows, Linux, Server, iOS SDK) before suggesting a function.
-- **Readable examples:** the vendor's examples as FileMaker script steps. With the Claris Agentic
-  Development Toolkit (ADT) installed, Claude writes them into your file directly; there's no
+- **Readable examples:** the vendor's examples as FileMaker script steps. With the Claris FileMaker Agentic Development Kit (ADK) installed, Claude writes them into your file directly; there's no
   clipboard XML.
 - **Stays current:** checks Monkeybread's release notes and this repo's `VERSION` once a
   session, and tells you when either is newer.

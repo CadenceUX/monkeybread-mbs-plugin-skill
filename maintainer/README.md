@@ -16,7 +16,7 @@ python3 maintainer/build_catalog.py references/ /path/to/fresh-cache
   `deprecated` per function. It exits 1, listing the pages, if any function page can't be
   fetched.
 - Examples: the vendor's pages carry each example as an `fmxmlsnippet`. `render_script.py`
-  turns it into readable script steps; the XML is not shipped. With Claris ADT, scripts go into
+  turns it into readable script steps; the XML is not shipped. With Claris ADK, scripts go into
   the file directly, so clipboard XML is never needed.
 - `version` in `index.json` is read from the skill's `VERSION` file, so bump `VERSION` first.
 - Add-on licence text (`ADDON_COMPONENTS`) deliberately carries no prices.

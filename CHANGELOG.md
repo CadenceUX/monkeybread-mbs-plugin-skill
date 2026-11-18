@@ -1,5 +1,23 @@
 # Changelog
 
+## [2.1.1] — 2026-11-19
+
+`cadenceux-dx` replaces the retired `fmp-dev-orchestrator`, and Claris's public FileMaker
+Agentic Development Kit (ADK) replaces the ADT preview name. No change to what the skill does.
+
+### Changed
+
+- The skill update self-check skips when `cadenceux-dx` is installed (its stack check covers
+  every CadenceUX skill), in place of `fmp-dev-orchestrator`.
+- Examples go into the file through Claris's FileMaker Agentic Development Kit (ADK) when
+  installed, in place of the ADT preview name.
+- ADT is now ADK in the instructions, README and evals.
+
+### Verified
+
+- `validate_skill.py` clean; `cadenceux-github` scanners clean.
+- Evals not re-run: names only, no change to instructions or reference data.
+
 ## [2.1.0] — 2026-11-18
 
 Catalog rebuilt for MBS Plugin 16.5 (released 10 November 2026) from a fresh live crawl, using

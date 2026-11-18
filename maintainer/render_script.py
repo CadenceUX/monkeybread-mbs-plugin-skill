@@ -1,6 +1,6 @@
 """Render a vendor fmxmlsnippet example as readable FileMaker script steps.
 
-The skill ships readable steps only: with Claris ADT, scripts are written into the file
+The skill ships readable steps only: with Claris ADK, scripts are written into the file
 directly, so clipboard XML is never needed. Used by build_catalog.py.
 """
 import re

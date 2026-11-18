@@ -43,7 +43,7 @@
       "prompt": "Show me a FileMaker script that uses MBS CURL to download a URL, so I can add it to my file.",
       "must": [
         "Gives readable script steps (Set Variable [ ... ] lines) based on the catalog examples",
-        "Says to write the steps into the file through ADT when installed, or enter them by hand"
+        "Says to write the steps into the file through ADK when installed, or enter them by hand"
       ],
       "must_not": [
         "Produces fmxmlsnippet or any clipboard XML"

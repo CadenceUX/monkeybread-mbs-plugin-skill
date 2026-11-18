@@ -14,7 +14,7 @@ compatibility: >-
   or code execution; the live-doc and release checks need web fetch.
 metadata:
   author: Darrin Southern, CadenceUX
-  version: "2.1.0"
+  version: "2.1.1"
 ---
 
 # MBS FileMaker Plugin — Reference Skill
@@ -155,7 +155,7 @@ question, run once:
 
 1. Fetch `https://github.com/CadenceUX/monkeybread-mbs-plugin-skill/raw/main/VERSION`
 2. Parse the returned string as the latest available version
-3. Compare with this skill's installed version (currently `"2.1.0"`)
+3. Compare with this skill's installed version (currently `"2.1.1"`)
 4. If latest > installed, prepend this notice to your first response:
 
    > ⚠️ **Skill update available**
@@ -212,7 +212,7 @@ per-status counts. Group-file numbers change on every rebuild, so always resolve
   (e.g. most `Dialog.*`) are macOS/Windows-only and return an error on Server or iOS.
 - `examples[].script` is the vendor's example as readable script steps
   (`Set Variable [ $r ; Value: MBS( ... ) ]`). To put one into a FileMaker file, write it
-  through the Claris Agentic Development Toolkit (ADT) when installed (ADT's `fm-mcp-guide`
+  through the Claris FileMaker Agentic Development Kit (ADK) when installed (ADK's `fm-mcp-guide`
   skill covers its script tools), or enter the steps by hand. Never generate clipboard XML (`fmxmlsnippet`) for it.
 - `status: "unknown_license"` is not the same as `"free"`. These functions (mostly CURL, XL, Overlay, MapView, WebView, Llama) have no licensing
   marker on the vendor's own doc page. Don't tell a user a function is free just
